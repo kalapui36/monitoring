@@ -1,0 +1,11 @@
+{
+  "name": "classroom-pulse-starter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "description": "교사용 수업 모니터링 대시보드 초기 UI 및 백엔드 설계 초안"
+}

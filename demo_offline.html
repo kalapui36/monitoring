@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Classroom Pulse - 실시간 학급 운영 대시보드 데모" />
+  <title>Classroom Pulse — 수업 운영 대시보드</title>
+  <style>
+:root{font-family:Inter,Pretendard,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:#20283b;background:#f6f8fc;font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #9fbfff;outline-offset:2px}.app-shell{display:flex;min-height:100vh}.sidebar{width:252px;flex-shrink:0;background:#151d30;color:#c3ccdf;display:flex;flex-direction:column;padding:27px 16px 16px;min-height:100vh;position:sticky;top:0;height:100vh}.brand{display:flex;align-items:center;text-decoration:none;gap:11px;padding:0 8px;color:white}.brand-icon{height:35px;width:35px;display:grid;place-items:center;color:white;border-radius:10px;background:#5e7ff9;box-shadow:0 4px 20px rgba(87,117,249,.38)}.brand-name{font-size:19px;line-height:1.05;letter-spacing:-.9px;font-weight:750}.brand-name span{color:#96aaff}.brand-name small{font-size:8px;font-weight:650;letter-spacing:1.7px;color:#8b9ab4;display:block;margin-top:6px}.workspace-switch{margin-top:36px;border:1px solid #354056;border-radius:11px;padding:11px 10px;display:flex;align-items:center;gap:10px;background:#1d2940}.workspace-avatar{width:33px;height:33px;display:grid;place-items:center;background:#3755a4;border-radius:8px;font-weight:700;color:white}.workspace-switch strong,.teacher-profile strong{font-size:12px;display:block;color:#f8fbff}.workspace-switch span,.teacher-profile span{font-size:11px;display:block;margin-top:4px;color:#9eabc3}.workspace-switch .chevron{margin-left:auto;font-size:15px;color:#9eabc3}.nav-label{font-size:9px;color:#74839f;font-weight:750;letter-spacing:1.6px;margin:36px 14px 13px}.navigation,.class-list{display:grid;gap:5px}.nav-item,.class-link{width:100%;border:0;text-align:left;background:transparent;color:#a9b5ce;padding:12px 13px;display:flex;align-items:center;gap:12px;border-radius:9px;font-size:12.5px;font-weight:550}.nav-item:hover,.class-link:hover{background:#24314b;color:white}.nav-item.active{background:#334c8c;color:#fff;font-weight:750}.nav-ico{font-size:20px;width:21px;text-align:center;font-weight:400;line-height:1}.nav-count{margin-left:auto;color:#b9c9ee;font-size:11px}.second-label{margin-top:36px}.class-link{gap:12px;padding:10px 13px}.class-link .class-dot{width:8px;height:8px;border-radius:100%;background:#687996}.class-link.selected{color:white;background:#24314a}.class-link.selected .class-dot{background:#80a5ff}.class-link .class-num{margin-left:auto;font-size:10px;color:#8292b0}.sidebar-bottom{margin-top:auto}.status-panel{display:flex;align-items:flex-start;gap:9px;background:#1e2d40;border:1px solid #30445b;padding:12px 10px;border-radius:11px;font-size:11px;color:#d8e5f6}.status-panel small{display:block;margin-top:6px;color:#8fa0b9;font-size:10px}.live-led{margin-top:3px;height:7px;width:7px;border-radius:100%;background:#f5c45a;box-shadow:0 0 0 3px rgba(245,196,90,.1)}.settings-link{margin-top:13px}.teacher-profile{display:flex;align-items:center;gap:10px;border-top:1px solid #2c374e;margin-top:15px;padding:18px 5px 0}.teacher-avatar,.user-mark{height:33px;width:33px;border-radius:50%;background:#c9d8ff;color:#304b91;display:grid;place-items:center;font-weight:800;font-size:12px}.teacher-profile .profile-more{margin-left:auto;color:#8c99b2;font-weight:bold;font-size:18px}.main-area{flex:1;min-width:0}.topbar{height:77px;display:flex;align-items:center;justify-content:space-between;padding:0 37px;background:#fff;border-bottom:1px solid #e8ebf1}.breadcrumbs{display:flex;align-items:center;gap:14px;font-size:12px;color:#8e99ac}.breadcrumbs strong{color:#2f3850;font-weight:700}.crumb-sep{color:#c8ced8}.top-actions{display:flex;align-items:center;gap:23px}.clock{font-size:11px;color:#728095}.top-divider{width:1px;height:21px;background:#e6e9ef}.top-icon{font-size:23px;color:#71819c}.user-mark{height:31px;width:31px}.content{max-width:1640px;margin:0 auto;padding:34px 37px 12px}.page-intro{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:29px}.eyebrow{color:#7183ac;font-size:10px;font-weight:800;letter-spacing:1.75px;display:flex;align-items:center;gap:8px}.eyebrow-line{height:2px;width:14px;background:#7390f8;border-radius:10px}.page-intro h1{font-size:29px;letter-spacing:-1.35px;font-weight:800;margin:9px 0 9px;color:#1b2640}.wave{font-size:22px;color:#93a8ff}.page-intro p{font-size:12.5px;color:#8390a4;margin:0}.page-intro-right{display:flex;gap:17px;align-items:center}.demo-tag{color:#b77c18;background:#fff7e8;border:1px solid #fae4b9;display:flex;align-items:center;gap:8px;font-size:11px;border-radius:30px;padding:8px 11px}.demo-tag .dot{background:#eab650;width:6px;height:6px;border-radius:50%}.btn{border:1px solid transparent;border-radius:9px;min-height:38px;padding:0 17px;display:inline-flex;gap:9px;align-items:center;justify-content:center;font-size:12px;font-weight:720;white-space:nowrap}.btn-ghost{color:#546178;background:transparent;border-color:#e3e7ee}.btn-ghost:hover,.btn-white:hover{background:#f5f7fa}.btn-white{background:#fff;color:#424f66;border-color:#e0e6f0}.btn-dark{background:#314e9d;color:#fff;box-shadow:0 4px 12px rgba(49,78,157,.13)}.btn-dark:hover{background:#243f8d}.button-icon{font-size:17px;font-weight:400}.class-toolbar{border-radius:15px;background:#fff;border:1px solid #e6ebf3;box-shadow:0 4px 18px rgba(42,62,111,.025);padding:22px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.class-title{display:flex;align-items:center;gap:14px}.class-graphic{width:49px;height:49px;display:grid;place-items:center;background:#ebf1ff;color:#4b6bc7;font-size:27px;border-radius:11px}.class-title-top{display:flex;align-items:center;gap:11px}.class-title strong{font-size:16px;letter-spacing:-.6px}.class-title span:not(.academic-badge){display:block;font-size:11px;color:#8490a3;margin-top:7px}.academic-badge{border-radius:5px;background:#edf3ff;color:#6280c5;font-size:10px;font-weight:700;padding:4px 7px}.class-actions{display:flex;align-items:center;gap:9px}.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:20px}.stat-card{background:#fff;border:1px solid #e9edf4;border-radius:14px;padding:19px 21px;min-height:151px;box-shadow:0 5px 20px rgba(23,42,81,.025)}.stat-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#718099;font-weight:650}.stat-icon{height:33px;width:33px;border-radius:10px;display:grid;place-items:center;font-size:20px;font-weight:650}.stat-icon.blue{background:#edf2ff;color:#6889e5}.stat-icon.green{background:#e7f9f3;color:#46b49b}.stat-icon.amber{background:#fff3e2;color:#eca24a}.stat-icon.purple{background:#f3edff;color:#9374e2}.stat-number{font-size:31px;color:#1f2a43;letter-spacing:-1.2px;font-weight:800;margin:2px 0 8px}.stat-number span{font-size:13px;font-weight:500;color:#8290a4;margin-left:3px}.stat-footer{display:flex;align-items:center;gap:7px;color:#9aa4b5;font-size:10px}.trend{height:16px;min-width:18px;padding:1px 4px;display:grid;place-items:center;border-radius:4px;font-size:10px}.light-blue{color:#5678dc;background:#edf2ff}.pale-green{color:#42ac89;background:#edf9f3}.pale-amber{color:#d8962d;background:#fff2dd}.pale-purple{color:#9067da;background:#f3edff}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;align-items:start;gap:18px}.student-panel,.right-panel{border:1px solid #e7ecf3;background:#fff;border-radius:14px;box-shadow:0 3px 16px rgba(34,53,97,.025)}.student-panel{padding:22px 22px 17px;min-width:0}.panel-heading,.right-panel-heading{display:flex;align-items:start;justify-content:space-between;gap:14px}.panel-title-row{display:flex;align-items:center;gap:9px}.panel-heading h2,.right-panel-heading h2{font-size:15px;font-weight:780;letter-spacing:-.5px;margin:0;color:#25314b}.student-count{font-size:10px;color:#5e79b9;border-radius:5px;background:#ecf2ff;padding:3px 6px}.panel-heading p,.right-panel-heading p{margin:8px 0 0;color:#9aa5b7;font-size:11px}.view-toggles{display:flex;background:#f5f7fa;border:1px solid #edf0f5;border-radius:7px;padding:3px;gap:2px}.view-toggle{width:26px;height:25px;border:0;color:#9da8b9;background:transparent;border-radius:5px;font-size:18px;line-height:1}.view-toggle.active{color:#5675be;background:white;box-shadow:0 1px 4px rgba(51,71,105,.12)}.filters{display:flex;gap:13px;align-items:center;margin:23px 0 17px;justify-content:space-between}.search-wrap{display:flex;align-items:center;border:1px solid #e5e9f1;background:#fbfcfe;border-radius:8px;min-width:190px;width:43%;height:36px;padding:0 12px;gap:9px}.search-icon{color:#9ba8bb;font-size:23px;line-height:1}.search-wrap input{background:transparent;border:0;outline:none;min-width:0;width:100%;font-size:11px;color:#2d3a53}.search-wrap input::placeholder{color:#aeb8c8}.filter-tabs{display:flex;align-items:center;gap:2px}.filter-tab{font-size:11px;color:#94a1b4;background:transparent;border:0;border-radius:6px;padding:8px 9px}.filter-tab.active{background:#edf2ff;color:#4f72bf;font-weight:750}.student-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.student-card{border:1px solid #e7ecf3;border-radius:10px;min-width:0;padding:14px;transition:.17s ease;position:relative;background:#fff;min-height:137px}.student-card:hover{border-color:#a5b9e7;box-shadow:0 5px 12px rgba(56,84,132,.05)}.student-card.chosen{background:#f6f9ff;border-color:#84a1e8}.student-card.needs-attention{border-left:3px solid #eaba75}.student-card-top{display:flex;align-items:center;gap:8px}.student-checkbox{appearance:none;width:15px;height:15px;border:1.5px solid #c8d1e0;border-radius:4px;margin:0;flex-shrink:0;background:#fff;cursor:pointer}.student-checkbox:checked{background:#5179d8;border-color:#5179d8;box-shadow:inset 0 0 0 3px white}.student-avatar{width:31px;height:31px;flex-shrink:0;display:grid;place-items:center;border-radius:9px;background:#e9f0ff;color:#5a78b9;font-size:11px;font-weight:800}.student-meta{min-width:0;flex:1}.student-name{display:block;font-size:12px;font-weight:750;color:#293550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.student-no{display:block;font-size:10px;color:#a0abbd;margin-top:4px}.connection-dot{width:6px;height:6px;background:#36bb90;border-radius:100%;align-self:flex-start;margin-top:4px}.connection-dot.offline{background:#d5dae4}.student-page{display:flex;align-items:center;gap:6px;margin:15px 0 5px;font-size:11px;color:#465875;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.page-glyph{color:#7b98c8;font-size:13px}.student-domain{font-size:10px;color:#a3aec0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-left:17px}.student-bottom{border-top:1px solid #f0f2f6;display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:9px;color:#a8b0bd;font-size:10px}.student-flags{display:flex;align-items:center;gap:4px}.flag{font-size:9px;padding:3px 5px;border-radius:4px;background:#f1f4fa;color:#7287af;font-weight:750}.flag.help{background:#edf0ff;color:#7762bc}.flag.locked{background:#f7eaf0;color:#b86984}.flag.attention{background:#fff4e4;color:#bd7e2e}.capture-btn{border:0;background:#f3f6fb;color:#6b7c9d;font-size:11px;width:22px;height:20px;border-radius:5px;cursor:pointer}.capture-btn:hover{background:#e2ebff;color:#4465be}.student-grid.list-view{display:block}.student-grid.list-view .student-card{display:grid;grid-template-columns:200px 1fr 135px;align-items:center;min-height:65px;margin-bottom:7px}.student-grid.list-view .student-page{margin:0}.student-grid.list-view .student-bottom{border:0;padding:0;margin:0}.student-grid.list-view .student-domain{margin-left:0}.student-grid.list-view .student-bottom{justify-content:flex-end;gap:15px}.selection-bar{display:flex;align-items:center;justify-content:space-between;margin:-4px 0 13px;background:#eaf1ff;border-radius:7px;padding:10px 12px;font-size:11px;color:#4566ab}.selection-bar div{display:flex;gap:6px}.small-action{font-size:10px;padding:5px 9px;border:1px solid #ccdaf9;background:#fff;color:#4668ae;border-radius:5px}.small-action.cancel{background:transparent}.hidden{display:none!important}.empty-state{grid-column:1/-1;min-height:150px;display:grid;place-items:center;color:#a0acc0;font-size:12px}.panel-footnote{display:flex;align-items:center;gap:8px;margin-top:18px;font-size:9.5px;color:#a9b2c1}.info-icon{height:15px;width:15px;border:1px solid #cbd3e0;border-radius:50%;display:grid;place-items:center;font-family:Georgia,serif;font-weight:bold}.right-stack{display:grid;gap:16px}.right-panel{padding:21px 19px}.small-live{font-size:9px;color:#31a987;background:#ebf8f3;padding:5px 7px;border-radius:5px;font-weight:750;display:flex;align-items:center;gap:5px}.small-live span{width:5px;height:5px;border-radius:50%;background:#34c499}.timeline{margin-top:22px}.timeline-entry{display:flex;align-items:flex-start;gap:11px;position:relative;padding:0 0 19px}.timeline-entry:not(:last-child):before{content:"";position:absolute;left:14px;top:25px;bottom:-3px;width:1px;background:#eef0f5}.timeline-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;flex-shrink:0;font-size:14px;background:#eef2fc;color:#6484cb;z-index:1}.timeline-icon.warn{background:#fff2e5;color:#d39a4d}.timeline-icon.green{background:#e9f8f2;color:#4aaa88}.timeline-icon.purple{background:#f2eefe;color:#9073ce}.timeline-entry strong{font-size:11px;color:#3d4a61;font-weight:720;line-height:1.35;display:block}.timeline-entry p{font-size:10px;color:#98a4b7;line-height:1.5;margin:6px 0 0;max-width:207px;overflow-wrap:anywhere}.timeline-entry time{font-size:9px;color:#b5bdca;display:block;margin-top:5px}.all-logs{width:100%;border:0;background:#f7f9fd;padding:11px;color:#6880ad;font-size:11px;border-radius:7px;display:flex;align-items:center;justify-content:center;gap:8px}.all-logs span{font-size:16px}.quick-panel{padding-bottom:10px}.quick-action{border:0;background:white;width:100%;display:flex;gap:10px;align-items:center;padding:15px 0;border-bottom:1px solid #f0f1f5;text-align:left}.quick-action:last-child{border-bottom:0}.quick-icon{height:34px;width:34px;border-radius:9px;display:grid;place-items:center;font-size:19px}.quick-icon.notice{background:#eff2ff;color:#7282d5}.quick-icon.unlock{background:#eaf8f3;color:#42ad8e}.quick-icon.export{background:#f3efff;color:#8c78c6}.quick-action span:nth-child(2){flex:1}.quick-action b{display:block;font-size:11px;color:#45516a}.quick-action small{display:block;font-size:9.5px;color:#a2adbf;margin-top:6px}.arrow-right{font-size:16px;color:#9da9ba}.footer{text-align:center;font-size:10px;color:#b0b9c7;margin:25px 0 10px}.footer span{margin:0 8px;color:#d3dae6}.toast-host{position:fixed;right:28px;bottom:24px;z-index:120;display:grid;gap:9px}.toast{min-width:270px;max-width:370px;padding:13px 16px;border:1px solid #d7e1f5;background:white;box-shadow:0 12px 35px rgba(25,45,78,.18);color:#2c3952;border-radius:10px;font-size:12px;line-height:1.6}.toast strong{display:block;margin-bottom:3px;color:#4967ae}.modal{width:min(450px,calc(100% - 28px));padding:27px 28px 25px;border:1px solid #ebeff5;border-radius:17px;box-shadow:0 18px 75px rgba(22,36,70,.24);color:#2c3a56}.modal::backdrop{background:rgba(22,32,56,.5);backdrop-filter:blur(2px)}.modal-header{display:flex;align-items:start;justify-content:space-between}.modal-icon{width:42px;height:42px;display:grid;place-items:center;background:#edf2ff;color:#5f7dd0;border-radius:10px;font-size:23px}.lock-icon{background:#f1edff;color:#846fc2}.close-dialog{border:0;background:transparent;color:#8290a6;font-size:17px}.modal h2{font-size:20px;letter-spacing:-.7px;margin:17px 0 8px}.modal p{font-size:12px;line-height:1.7;color:#8c99ae;margin:0 0 21px}.modal label{display:block;font-size:12px;font-weight:700;color:#54627b;margin-bottom:9px}.modal textarea,.modal select{border:1px solid #dfe5ef;border-radius:9px;width:100%;padding:11px;font-size:12px;color:#34425a;background:#fff;resize:vertical}.modal-row{margin:15px 0;display:flex;justify-content:space-between;align-items:center}.modal-row label{margin:0}.modal select{width:120px}.form-warning{font-size:10.5px;padding:11px 13px;background:#fff7e8;color:#a67a36;border-radius:7px;line-height:1.5;margin-top:14px}.modal-footer{display:flex;justify-content:flex-end;gap:9px;margin-top:23px}
+@media(max-width:1400px){.dashboard-grid{grid-template-columns:minmax(0,1fr) 290px}.student-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:1080px){.sidebar{width:210px}.content{padding:28px 23px}.topbar{padding:0 23px}.dashboard-grid{grid-template-columns:1fr}.right-stack{grid-template-columns:repeat(2,minmax(0,1fr))}.student-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:780px){.sidebar{width:65px;padding-left:10px;padding-right:10px}.brand-name,.workspace-switch,.nav-label,.nav-item>span:not(.nav-ico),.class-list,.status-panel,.teacher-profile>div:not(.teacher-avatar),.profile-more{display:none!important}.brand{padding:0 4px}.nav-item{justify-content:center;padding:11px 0}.navigation{margin-top:50px}.teacher-profile{justify-content:center}.settings-link{display:flex}.topbar{height:63px}.top-actions .clock{display:none}.page-intro{align-items:start}.page-intro h1{font-size:23px}.page-intro-right{flex-direction:column;gap:6px;align-items:flex-end}.class-toolbar{align-items:flex-start;gap:15px;flex-direction:column}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.student-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.filters{align-items:stretch;flex-direction:column}.search-wrap{width:100%}}@media(max-width:540px){.content{padding:20px 12px}.sidebar{width:54px;padding:20px 6px}.sidebar .brand-icon{height:30px;width:30px}.topbar{padding:0 12px}.breadcrumbs{gap:8px;font-size:10px}.top-actions{gap:9px}.page-intro{flex-direction:column;gap:12px}.page-intro-right{flex-direction:row}.stats-grid{gap:8px}.stat-card{padding:14px;min-height:130px}.stat-number{font-size:27px}.student-panel{padding:15px 11px}.student-grid{grid-template-columns:1fr}.student-grid.list-view .student-card{grid-template-columns:1fr}.student-grid.list-view .student-bottom{justify-content:space-between}.right-stack{grid-template-columns:1fr}.selection-bar{align-items:flex-start;flex-direction:column;gap:9px}.class-actions{width:100%}.class-actions .btn{flex:1;padding:9px 5px}}
+
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="왼쪽 메뉴">
+      <a class="brand" href="#dashboard" aria-label="Classroom Pulse 홈">
+        <span class="brand-icon"><svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h4l3-7 4 12 3-7h4"/></svg></span>
+        <span class="brand-name">classroom<span>pulse</span><small>TEACHER CONSOLE</small></span>
+      </a>
+      <div class="workspace-switch"><div class="workspace-avatar">C</div><div><strong>나의 워크스페이스</strong><span>수업 관리 공간</span></div><span class="chevron">⌄</span></div>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="navigation">
+        <button class="nav-item active" data-nav="dashboard"><span class="nav-ico">▦</span><span>대시보드</span></button>
+        <button class="nav-item" data-nav="students"><span class="nav-ico">♙</span><span>학생 관리</span><span class="nav-count">20</span></button>
+        <button class="nav-item" data-nav="activity"><span class="nav-ico">◷</span><span>활동 기록</span></button>
+        <button class="nav-item" data-nav="capture"><span class="nav-ico">▣</span><span>화면 캡처</span></button>
+      </nav>
+      <div class="nav-label second-label">MY CLASSES</div>
+      <div class="class-list" id="sidebarClasses"></div>
+      <div class="sidebar-bottom">
+        <div class="status-panel"><span class="live-led"></span><span>프로젝트 시연 모드<small>실제 학생과 연결되지 않음</small></span></div>
+        <button class="nav-item settings-link" data-nav="settings"><span class="nav-ico">⚙</span><span>설정 및 연결</span></button>
+        <div class="teacher-profile"><div class="teacher-avatar">T</div><div><strong>교사 계정</strong><span>데모 사용자</span></div><span class="profile-more">···</span></div>
+      </div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar">
+        <div class="breadcrumbs"><span>워크스페이스</span><span class="crumb-sep">/</span><strong id="breadcrumbClass">6학년 2반</strong><span class="crumb-sep">/</span><span id="breadcrumbPage">대시보드</span></div>
+        <div class="top-actions"><div class="clock" id="currentClock"></div><span class="top-divider"></span><span class="top-icon" title="알림 센터">♧</span><div class="user-mark">T</div></div>
+      </header>
+      <div class="content" id="mainContent">
+        <div class="page-intro"><div><div class="eyebrow"><span class="eyebrow-line"></span>CLASSROOM OVERVIEW</div><h1>오늘의 수업 현황 <span class="wave">✦</span></h1><p>학생들의 학습 활동과 수업 흐름을 한곳에서 확인하세요.</p></div><div class="page-intro-right"><span class="demo-tag"><span class="dot"></span> 데모 데이터</span><button class="btn btn-ghost" id="helpGuide">시작 가이드 <span>↗</span></button></div></div>
+        <div class="class-toolbar"><div class="class-title"><div class="class-graphic">▤</div><div><div class="class-title-top"><strong id="currentClassName">6학년 2반</strong><span class="academic-badge">정규 수업</span></div><span id="classDescription">총 20명의 학생 · 실시간 현황</span></div></div><div class="class-actions"><button class="btn btn-white" id="openNotice"><span class="button-icon">✉</span> 전체 공지</button><button class="btn btn-dark" id="lockAll"><span class="button-icon">▣</span> 전체 화면 잠금</button></div></div>
+        <section class="stats-grid" aria-label="학급 현황 지표">
+          <div class="stat-card"><div class="stat-top"><span>전체 학생</span><div class="stat-icon blue">♙</div></div><div class="stat-number" id="statTotal">20<span>명</span></div><div class="stat-footer"><span class="trend light-blue">↗</span><span>현재 선택한 학급</span></div></div>
+          <div class="stat-card"><div class="stat-top"><span>온라인 학생</span><div class="stat-icon green">↗</div></div><div class="stat-number" id="statOnline">18<span>명</span></div><div class="stat-footer"><span class="trend pale-green">●</span><span>접속 중인 학생</span></div></div>
+          <div class="stat-card"><div class="stat-top"><span>확인 필요</span><div class="stat-icon amber">!</div></div><div class="stat-number" id="statAttention">2<span>명</span></div><div class="stat-footer"><span class="trend pale-amber">!</span><span>주의 사이트 감지</span></div></div>
+          <div class="stat-card"><div class="stat-top"><span>도움 요청</span><div class="stat-icon purple">♡</div></div><div class="stat-number" id="statHelp">1<span>건</span></div><div class="stat-footer"><span class="trend pale-purple">●</span><span>응답이 필요한 학생</span></div></div>
+        </section>
+        <div class="dashboard-grid">
+          <section class="student-panel">
+            <div class="panel-heading"><div><div class="panel-title-row"><h2>학생별 실시간 상태</h2><span class="student-count" id="studentCountLabel">20</span></div><p>접속 상태와 학습 중인 페이지를 확인하세요.</p></div><div class="view-toggles"><button id="gridView" class="view-toggle active" title="카드 보기" aria-label="카드 보기">▦</button><button id="listView" class="view-toggle" title="목록 보기" aria-label="목록 보기">☷</button></div></div>
+            <div class="filters"><div class="search-wrap"><span class="search-icon">⌕</span><input type="search" id="studentSearch" placeholder="이름, 번호, 사이트 검색" aria-label="학생 검색" /></div><div class="filter-tabs" role="group" aria-label="상태 필터"><button class="filter-tab active" data-filter="all">전체</button><button class="filter-tab" data-filter="online">온라인</button><button class="filter-tab" data-filter="offline">오프라인</button><button class="filter-tab" data-filter="attention">주의</button></div></div>
+            <div class="selection-bar hidden" id="selectionBar"><span><b id="selectedCount">0</b>명 선택됨</span><div><button class="small-action" id="lockSelected">🔒 잠금</button><button class="small-action" id="unlockSelected">잠금 해제</button><button class="small-action cancel" id="clearSelection">선택 취소</button></div></div>
+            <div id="studentsContainer" class="student-grid" aria-live="polite"></div>
+            <div class="panel-footnote"><span class="info-icon">i</span><span>현재 화면은 시연용 가상 데이터입니다. 실제 학생을 연결하려면 인증·서버 설정이 필요합니다.</span></div>
+          </section>
+          <aside class="right-stack">
+            <section class="right-panel activity-panel"><div class="right-panel-heading"><div><h2>최근 활동</h2><p>교실에서 일어난 변경 사항</p></div><span class="small-live"><span></span> LIVE</span></div><div class="timeline" id="activityTimeline"></div><button class="all-logs" id="showAllLogs">전체 활동 보기 <span>→</span></button></section>
+            <section class="right-panel quick-panel"><div class="right-panel-heading"><div><h2>빠른 제어</h2><p>자주 쓰는 수업 도구</p></div></div><button class="quick-action" id="quickNotice"><span class="quick-icon notice">✉</span><span><b>전체 공지 보내기</b><small>학생에게 안내 메시지 표시</small></span><span class="arrow-right">↗</span></button><button class="quick-action" id="quickUnlock"><span class="quick-icon unlock">♧</span><span><b>전체 잠금 해제</b><small>모든 학생 학습 화면으로 복귀</small></span><span class="arrow-right">↗</span></button><button class="quick-action" id="quickExport"><span class="quick-icon export">↧</span><span><b>현황 내보내기</b><small>현재 화면의 데모 기록 CSV</small></span><span class="arrow-right">↗</span></button></section>
+          </aside>
+        </div>
+        <footer class="footer">Classroom Pulse <span>·</span> Teacher Console <span>·</span> 초기 UI 프로토타입 v0.1 <span>·</span> 학생 실데이터 사용 전 보안 설정 필수</footer>
+      </div>
+    </main>
+  </div>
+  <div class="toast-host" id="toastHost" aria-live="polite"></div>
+  <dialog class="modal" id="noticeDialog"><form method="dialog" id="noticeForm"><div class="modal-header"><span class="modal-icon">✉</span><button type="button" class="close-dialog" data-close-dialog aria-label="닫기">✕</button></div><h2>전체 공지 보내기</h2><p>선택한 학급의 학생 화면에 보여줄 메시지를 작성하세요.</p><label for="noticeText">공지 내용</label><textarea id="noticeText" maxlength="160" rows="4" placeholder="예: 지금부터 활동을 마무리하고 앞을 봐 주세요." required></textarea><div class="modal-row"><label for="noticeSeconds">표시 시간</label><select id="noticeSeconds"><option value="5">5초</option><option value="10" selected>10초</option><option value="20">20초</option><option value="30">30초</option><option value="60">60초</option></select></div><div class="form-warning">이 화면은 데모입니다. 실제 학생에게 공지가 전송되지 않습니다.</div><div class="modal-footer"><button type="button" class="btn btn-white" data-close-dialog>취소</button><button type="submit" class="btn btn-dark">데모 공지 보내기 →</button></div></form></dialog>
+  <dialog class="modal confirm-modal" id="confirmDialog"><div class="modal-header"><span class="modal-icon lock-icon">▣</span><button type="button" class="close-dialog" data-close-dialog aria-label="닫기">✕</button></div><h2 id="confirmTitle">전체 화면 잠금</h2><p id="confirmDescription">선택한 학생들의 학습 화면을 잠급니다.</p><div class="form-warning">실제 기기 제어가 아닌 시연 상태 변경입니다.</div><div class="modal-footer"><button type="button" class="btn btn-white" data-close-dialog>취소</button><button type="button" class="btn btn-dark" id="confirmAction">확인</button></div></dialog>
+  <script>
+const CLASSROOMS = [
+  { id: 'main', name: '6학년 2반', subtitle: '정규 수업', size: 20 },
+  { id: 'club', name: '미디어 동아리', subtitle: '동아리', size: 8 },
+  { id: 'special', name: '방과후 창작반', subtitle: '외부 수업', size: 6 },
+];
+
+const onlinePages = [
+  ['국립중앙박물관', 'museum.go.kr', 'learning'],
+  ['Google Classroom', 'classroom.google.com', 'learning'],
+  ['EBS 초등', 'primary.ebs.co.kr', 'learning'],
+  ['Google Docs', 'docs.google.com', 'learning'],
+  ['YouTube - 수학 개념', 'youtube.com', 'media'],
+  ['문서 작성', 'docs.google.com', 'learning'],
+  ['Scratch', 'scratch.mit.edu', 'learning'],
+  ['퀴즈 활동', 'quiz.example.edu', 'learning'],
+];
+
+function createDemoStudents(groupId = 'main') {
+  const group = CLASSROOMS.find((c) => c.id === groupId) ?? CLASSROOMS[0];
+  return Array.from({ length: group.size }, (_, n) => {
+    const id = n + 1;
+    const isOffline = id === 7 || (groupId === 'main' && id === 18);
+    const needsAttention = id === 11 || (groupId === 'main' && id === 15);
+    const page = onlinePages[(n + (groupId === 'club' ? 2 : 0)) % onlinePages.length];
+    return {
+      id: `${groupId}-${id}`,
+      number: id,
+      name: `학생 ${String(id).padStart(2, '0')}`,
+      classId: groupId,
+      online: !isOffline,
+      attention: needsAttention,
+      locked: false,
+      help: groupId === 'main' && id === 4,
+      page: isOffline ? '연결 대기 중' : needsAttention ? '주의 사이트 감지' : page[0],
+      domain: isOffline ? '—' : needsAttention ? 'example-game.test' : page[1],
+      category: needsAttention ? 'attention' : page[2],
+      elapsedMinutes: isOffline ? 0 : 3 + ((id * 7) % 37),
+      lastSeen: isOffline ? '6분 전' : id % 3 === 0 ? '방금' : '12초 전',
+    };
+  });
+}
+
+function filterStudents(students, { query = '', status = 'all' } = {}) {
+  const needle = query.trim().toLocaleLowerCase('ko-KR');
+  return students.filter((student) => {
+    const matchesText = !needle || [student.name, String(student.number), student.page, student.domain].some((field) => String(field).toLocaleLowerCase('ko-KR').includes(needle));
+    const matchesStatus = status === 'all' || (status === 'online' && student.online) || (status === 'offline' && !student.online) || (status === 'attention' && student.attention) || (status === 'locked' && student.locked);
+    return matchesText && matchesStatus;
+  });
+}
+
+function summarizeStudents(students) {
+  return {
+    total: students.length,
+    online: students.filter((s) => s.online).length,
+    offline: students.filter((s) => !s.online).length,
+    attention: students.filter((s) => s.attention).length,
+    locked: students.filter((s) => s.locked).length,
+    help: students.filter((s) => s.help).length,
+  };
+}
+
+function updateLocks(students, ids, locked) {
+  const targetIds = new Set(ids);
+  return students.map((student) => targetIds.has(student.id) ? { ...student, locked: Boolean(locked) } : student);
+}
+
+function validateNotice(text, seconds) {
+  const message = String(text ?? '').trim();
+  const duration = Number(seconds);
+  if (!message || message.length > 160) throw new Error('공지 문구는 1~160자로 입력해 주세요.');
+  if (!Number.isInteger(duration) || duration < 1 || duration > 60) throw new Error('표시 시간은 1~60초 사이로 선택해 주세요.');
+  return { message, seconds: duration };
+}
+
+function sanitizeForDisplay(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+}
+
+
+
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => [...document.querySelectorAll(selector)];
+const storageKey = 'classroom-pulse-demo-v01';
+const state = {
+  classId: 'main',
+  studentsByClass: Object.fromEntries(CLASSROOMS.map((c) => [c.id, createDemoStudents(c.id)])),
+  query: '', filter: 'all', view: 'grid', selected: new Set(),
+  logs: [
+    { kind: 'green', icon: '✓', title: '데모 학급이 준비되었습니다', detail: '가상 학생 데이터를 불러왔습니다.', time: '방금' },
+    { kind: 'purple', icon: '♡', title: '학생 04 · 도움 요청', detail: '시연용 도움 요청 상태입니다.', time: '3분 전' },
+    { kind: 'warn', icon: '!', title: '학생 11 · 주의 사이트', detail: '주의 사이트 활동이 감지된 상황의 예시입니다.', time: '8분 전' },
+    { kind: 'green', icon: '↗', title: '수업 시작', detail: '학급 대시보드 시연이 시작되었습니다.', time: '12분 전' }
+  ]
+};
+
+function currentStudents() { return state.studentsByClass[state.classId]; }
+function currentClass() { return CLASSROOMS.find((c) => c.id === state.classId); }
+function addLog(title, detail, kind = 'green', icon = '✓') {
+  state.logs.unshift({ title, detail, kind, icon, time: '방금' });
+  state.logs = state.logs.slice(0, 20);
+  renderTimeline();
+}
+function notice(message, title = '데모 알림') {
+  const host = $('#toastHost');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  const strong = document.createElement('strong'); strong.textContent = title;
+  const body = document.createElement('div'); body.textContent = message;
+  el.append(strong, body); host.appendChild(el);
+  setTimeout(() => el.remove(), 5200);
+}
+function renderClasses() {
+  $('#sidebarClasses').innerHTML = CLASSROOMS.map((group) => `<button class="class-link ${group.id === state.classId ? 'selected' : ''}" data-class="${group.id}"><span class="class-dot"></span><span>${sanitizeForDisplay(group.name)}</span><span class="class-num">${group.size}</span></button>`).join('');
+  $$('[data-class]').forEach((button) => button.addEventListener('click', () => switchClass(button.dataset.class)));
+}
+function renderStats() {
+  const summary = summarizeStudents(currentStudents());
+  $('#statTotal').innerHTML = `${summary.total}<span>명</span>`;
+  $('#statOnline').innerHTML = `${summary.online}<span>명</span>`;
+  $('#statAttention').innerHTML = `${summary.attention}<span>명</span>`;
+  $('#statHelp').innerHTML = `${summary.help}<span>건</span>`;
+  $('#studentCountLabel').textContent = summary.total;
+  $('.nav-count').textContent = summary.total;
+  const group = currentClass();
+  $('#currentClassName').textContent = group.name;
+  $('#breadcrumbClass').textContent = group.name;
+  $('#classDescription').textContent = `총 ${summary.total}명의 학생 · 가상 현황`;
+  $('.academic-badge').textContent = group.subtitle;
+  $('#lockAll').innerHTML = summary.locked === summary.total ? '<span class="button-icon">♧</span> 전체 잠금 해제' : '<span class="button-icon">▣</span> 전체 화면 잠금';
+}
+function studentMarkup(student) {
+  const isChosen = state.selected.has(student.id);
+  const flags = [student.locked ? '<span class="flag locked">잠금</span>' : '', student.help ? '<span class="flag help">도움 요청</span>' : '', student.attention ? '<span class="flag attention">주의</span>' : ''].join('');
+  return `<article class="student-card ${isChosen ? 'chosen' : ''} ${student.attention ? 'needs-attention' : ''}" data-student-id="${student.id}">
+    <div class="student-card-top"><input type="checkbox" class="student-checkbox" aria-label="${sanitizeForDisplay(student.name)} 선택" ${isChosen ? 'checked' : ''} /><span class="student-avatar">${String(student.number).padStart(2, '0')}</span><div class="student-meta"><span class="student-name">${sanitizeForDisplay(student.name)}</span><span class="student-no">${student.number}번 학생</span></div><span class="connection-dot ${student.online ? '' : 'offline'}" title="${student.online ? '온라인' : '오프라인'}"></span></div>
+    <div class="student-page"><span class="page-glyph">${student.online ? '◈' : '○'}</span><span title="${sanitizeForDisplay(student.page)}">${sanitizeForDisplay(student.page)}</span></div>
+    <div class="student-domain">${sanitizeForDisplay(student.domain)}</div>
+    <div class="student-bottom"><div class="student-flags">${flags || `<span>${student.online ? student.elapsedMinutes + '분 이용 중' : '오프라인'}</span>`}</div><div style="display:flex;align-items:center;gap:5px"><span>${sanitizeForDisplay(student.lastSeen)}</span><button type="button" class="capture-btn" data-capture="${student.id}" aria-label="${sanitizeForDisplay(student.name)} 캡처 미리보기">▣</button></div></div>
+  </article>`;
+}
+function renderStudents() {
+  const students = filterStudents(currentStudents(), { query: state.query, status: state.filter });
+  const container = $('#studentsContainer');
+  container.className = state.view === 'list' ? 'student-grid list-view' : 'student-grid';
+  container.innerHTML = students.length ? students.map(studentMarkup).join('') : '<div class="empty-state">조건에 맞는 학생이 없습니다. 다른 검색어를 입력해 보세요.</div>';
+  $$('.student-card').forEach((card) => {
+    const cb = card.querySelector('.student-checkbox');
+    cb.addEventListener('change', () => {
+      const id = card.dataset.studentId;
+      if (cb.checked) state.selected.add(id); else state.selected.delete(id);
+      renderStudents();
+    });
+    card.querySelector('[data-capture]').addEventListener('click', () => {
+      const s = currentStudents().find((x) => x.id === card.dataset.studentId);
+      notice(`${s.name}의 실제 화면에 접근하지 않았습니다. 실제 캡처 기능은 별도 권한·서버 연동 후 개발합니다.`, '화면 캡처 데모');
+      addLog(`${s.name} · 캡처 데모`, '실제 이미지 수집 없이 버튼 반응만 시험했습니다.', 'purple', '▣');
+    });
+  });
+  renderSelection();
+}
+function renderSelection() {
+  $('#selectionBar').classList.toggle('hidden', state.selected.size === 0);
+  $('#selectedCount').textContent = state.selected.size;
+}
+function renderTimeline() {
+  $('#activityTimeline').innerHTML = state.logs.slice(0, 5).map((log) => `<div class="timeline-entry"><span class="timeline-icon ${log.kind}">${sanitizeForDisplay(log.icon)}</span><div><strong>${sanitizeForDisplay(log.title)}</strong><p>${sanitizeForDisplay(log.detail)}</p><time>${sanitizeForDisplay(log.time)}</time></div></div>`).join('');
+}
+function renderAll() { renderClasses(); renderStats(); renderStudents(); renderTimeline(); }
+function switchClass(classId) {
+  if (!CLASSROOMS.some((c) => c.id === classId)) return;
+  state.classId = classId; state.selected.clear(); state.query = ''; state.filter = 'all';
+  $('#studentSearch').value = '';
+  $$('[data-filter]').forEach((button) => button.classList.toggle('active', button.dataset.filter === 'all'));
+  renderAll();
+}
+let pendingConfirm = null;
+function requestLock(ids, locked) {
+  if (!ids.length) { notice('학생을 먼저 선택해 주세요.'); return; }
+  pendingConfirm = () => {
+    state.studentsByClass[state.classId] = updateLocks(currentStudents(), ids, locked);
+    state.selected.clear();
+    renderStats(); renderStudents();
+    addLog(`${ids.length}명 · ${locked ? '잠금' : '잠금 해제'} 데모`, '데모 상태만 변경했습니다. 학생 기기에는 영향을 주지 않습니다.', locked ? 'purple' : 'green', locked ? '▣' : '✓');
+    notice(`${ids.length}명의 ${locked ? '잠금' : '잠금 해제'} 상태를 데모에서 변경했습니다.`);
+  };
+  $('#confirmTitle').textContent = locked ? '화면 잠금 시연' : '화면 잠금 해제 시연';
+  $('#confirmDescription').textContent = `${ids.length}명의 학생에게 ${locked ? '화면 잠금' : '잠금 해제'} 명령을 보내는 상황을 시연합니다.`;
+  $('#confirmDialog').showModal();
+}
+function downloadCsv() {
+  const rows = [['번호','이름','접속 상태','현재 페이지','도메인','잠금 상태'], ...currentStudents().map((s) => [s.number,s.name,s.online?'온라인':'오프라인',s.page,s.domain,s.locked?'잠금':'해제'])];
+  const csv = '\ufeff' + rows.map((row) => row.map((cell) => '"' + String(cell).replace(/"/g, '""') + '"').join(',')).join('\r\n');
+  const url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'}));
+  const a = document.createElement('a'); a.href = url; a.download = `classroom-pulse-demo-${state.classId}.csv`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  addLog('CSV 내보내기', '가상 데이터가 CSV 파일로 생성되었습니다.', 'green', '↧');
+}
+function updateClock() {
+  $('#currentClock').textContent = new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'long',day:'numeric',weekday:'short',hour:'2-digit',minute:'2-digit'}).format(new Date());
+}
+function setupEvents() {
+  $('#studentSearch').addEventListener('input',(e)=>{state.query=e.target.value;renderStudents();});
+  $$('[data-filter]').forEach((button)=>button.addEventListener('click',()=>{
+    state.filter=button.dataset.filter;
+    $$('[data-filter]').forEach((b)=>b.classList.toggle('active',b===button));
+    renderStudents();
+  }));
+  $('#gridView').addEventListener('click',()=>{state.view='grid';$('#gridView').classList.add('active');$('#listView').classList.remove('active');renderStudents();});
+  $('#listView').addEventListener('click',()=>{state.view='list';$('#listView').classList.add('active');$('#gridView').classList.remove('active');renderStudents();});
+  $('#clearSelection').addEventListener('click',()=>{state.selected.clear();renderStudents();});
+  $('#lockSelected').addEventListener('click',()=>requestLock([...state.selected],true));
+  $('#unlockSelected').addEventListener('click',()=>requestLock([...state.selected],false));
+  $('#lockAll').addEventListener('click',()=>{const all=currentStudents();const alreadyLocked=all.every((s)=>s.locked);requestLock(all.map((s)=>s.id),!alreadyLocked);});
+  $('#quickUnlock').addEventListener('click',()=>requestLock(currentStudents().map((s)=>s.id),false));
+  for (const id of ['openNotice','quickNotice']) $("#"+id).addEventListener('click',()=>$('#noticeDialog').showModal());
+  $('#noticeForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    try {
+      const result=validateNotice($('#noticeText').value,$('#noticeSeconds').value);
+      $('#noticeDialog').close();$('#noticeText').value='';
+      notice(`공지: ${result.message} (${result.seconds}초 표시 시연)`, '가상 공지 전송');
+      addLog('전체 공지 데모', `${result.seconds}초 · ${result.message}`, 'green', '✉');
+    } catch(err){notice(err.message,'입력 확인');}
+  });
+  $$('[data-close-dialog]').forEach((button)=>button.addEventListener('click',()=>button.closest('dialog').close()));
+  $('#confirmAction').addEventListener('click',()=>{if(pendingConfirm)pendingConfirm();pendingConfirm=null;$('#confirmDialog').close();});
+  $('#confirmDialog').addEventListener('close',()=>{pendingConfirm=null;});
+  $('#quickExport').addEventListener('click',downloadCsv);
+  $('#showAllLogs').addEventListener('click',()=>notice('실시간 로그 화면은 다음 개발 단계에서 Supabase와 연결합니다.', '활동 기록 설계 중'));
+  $('#helpGuide').addEventListener('click',()=>notice('가상 학생을 선택하거나 전체 공지, 잠금 기능을 시연할 수 있습니다. 학생 기기와 연결되지는 않습니다.', '대시보드 사용 안내'));
+  $$('[data-nav]').forEach((button)=>button.addEventListener('click',()=>{
+    const tab=button.dataset.nav;
+    if(tab==='capture'){notice('실제 화면 캡처는 연결하지 않았습니다. 학생 카드의 ▣ 버튼으로 시연 흐름을 확인할 수 있습니다.','화면 캡처');return;}
+    if(tab==='settings'){notice('인증, Supabase URL, 초대코드는 개발자 설정 단계에서 연결합니다.','백엔드 준비 중');return;}
+    $$('.navigation .nav-item').forEach((link)=>link.classList.toggle('active',link===button));
+    $('#breadcrumbPage').textContent=({dashboard:'대시보드',students:'학생 관리',activity:'활동 기록'})[tab]??'대시보드';
+    if(tab==='activity')$('.activity-panel').scrollIntoView({behavior:'smooth',block:'center'});
+    else if(tab==='students')$('#studentSearch').focus();
+    else window.scrollTo({top:0,behavior:'smooth'});
+  }));
+}
+setupEvents();renderAll();updateClock();setInterval(updateClock,60000);
+
+</script>
+</body>
+</html>
