@@ -38,12 +38,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Use GitHub Actions as the Pages source
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           if ! gh api --method PUT "repos/$GITHUB_REPOSITORY/pages" -f build_type=workflow --silent; then
-            echo "Pages 설정을 자동 변경하지 못했습니다. Settings > Pages > Source를 GitHub Actions로 선택한 뒤 다시 실행하세요."
-            exit 1
+            echo "::warning::Pages Source 자동 변경 실패. 기존 설정으로 게시를 시도합니다. 게시도 실패하면 Settings > Pages > Source를 GitHub Actions로 선택하고 다시 실행하세요."
           fi
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - name: Publish
