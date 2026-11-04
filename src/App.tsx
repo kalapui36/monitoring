@@ -275,7 +275,7 @@ function ConnectedApp({ client, projectUrl }: { client: SupabaseClient; projectU
               프로젝트에서 가입하면 안 됩니다.
             </p>
             <code className="user-id">{session.user.id}</code>
-            <pre className="guide-code">{`insert into public.app_admins(user_id) values ('${session.user.id}');`}</pre>
+            <pre className="guide-code">{`insert into public.app_admins(user_id) values ('${session.user.id}') on conflict (user_id) do nothing;`}</pre>
             <label className="signup-consent">
               <input
                 type="checkbox"

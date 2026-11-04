@@ -2,10 +2,13 @@ import { oauthRedirect } from '../backend'
 import { RELEASE_LABEL } from '../release'
 import { useState } from 'react'
 import setupTemplate from '../../docs/SETUP.ko.md?raw'
+import firstSetupTemplate from '../../docs/FIRST_SETUP.ko.md?raw'
 import baseSql from '../../supabase/migrations/202610220001_monitoring.sql?raw'
 import teacherSql from '../../supabase/migrations/202611040001_teacher_accounts.sql?raw'
 import personalSql from '../../supabase/migrations/202611040002_personal_project.sql?raw'
 import securitySql from '../../supabase/migrations/202611040003_security_hardening.sql?raw'
+import installSql from '../../setup-files/monitoring-install.sql?raw'
+import dashboardFunction from '../../setup-files/device-dashboard.txt?raw'
 function download(name: string, content: string) {
   const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }))
   const a = document.createElement('a')
@@ -101,13 +104,25 @@ export function WelcomeGuide({
   initialTab?: 'teacher' | 'operator'
 }) {
   const [tab, setTab] = useState<'teacher' | 'operator' | 'student'>(initialTab)
+  const [copied, setCopied] = useState('')
+  async function copySetup(text: string, label: string) {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(label + ' 복사 완료. Supabase 입력창에 붙여 넣으세요.')
+    } catch {
+      setCopied('복사 권한을 확인하거나 다운로드한 파일을 열어 전체 내용을 복사하세요.')
+    }
+  }
   const websiteUrl = oauthRedirect()
   const websiteOrigin = new URL(websiteUrl).origin
-  const setupText = setupTemplate
-    .replaceAll('https://kalapui.com/monitoring/', websiteUrl)
-    .replaceAll('https://kalapui36.github.io/monitoring/', websiteUrl)
-    .replaceAll('https://kalapui36.github.io', websiteOrigin)
-    .replaceAll('https://kalapui.com', websiteOrigin)
+  const localize = (text: string) =>
+    text
+      .replaceAll('https://kalapui.com/monitoring/', websiteUrl)
+      .replaceAll('https://kalapui36.github.io/monitoring/', websiteUrl)
+      .replaceAll('https://kalapui36.github.io', websiteOrigin)
+      .replaceAll('https://kalapui.com', websiteOrigin)
+  const setupText = localize(firstSetupTemplate)
+  const detailedSetupText = localize(setupTemplate)
   return (
     <main className="welcome-guide">
       <header className="guide-header">
@@ -227,11 +242,29 @@ export function WelcomeGuide({
               </p>
             </li>
             <li>
-              <h3>2. SQL 네 개 순서대로 실행</h3>
+              <h3>2. 통합 SQL로 데이터베이스 설치</h3>
               <p>
-                아래 파일 전체 내용을 본인 Supabase SQL Editor → New query에 붙여 넣고 Run 합니다. ①
-                성공 후 ②, 다음 ③을 실행하세요. 기존 DB는 먼저 백업합니다. 나중에 예전 ①만 다시
-                적용하지 마세요.
+                처음 만든 빈 프로젝트는 아래 ‘통합 설치 SQL 복사’를 누릅니다. 본인 Supabase SQL
+                Editor → New query의 큰 코드 입력창에 전체 붙여넣기 → Run 후 결과가
+                installed_security_version = 4인지 확인하세요. 이름·비밀번호를 코드에 넣지 않습니다.
+              </p>
+              <div className="detail-actions">
+                <button
+                  className="button primary"
+                  onClick={() => copySetup(installSql, '통합 설치 SQL')}
+                >
+                  통합 설치 SQL 복사
+                </button>
+                <button
+                  className="button"
+                  onClick={() => download('monitoring-install.sql', installSql)}
+                >
+                  통합 설치 SQL 다운로드
+                </button>
+              </div>
+              <p>
+                아래 개별 파일은 대체 설치·업데이트용입니다. 개별 설치는 ①→②→③→④ 순서로 실행합니다.
+                기존 DB는 먼저 백업하고 설치 이력을 확인하세요.
               </p>
               <div className="detail-actions">
                 <button
@@ -284,6 +317,42 @@ export function WelcomeGuide({
             </li>
             <li>
               <h3>로그인 설정에 복사할 현재 웹 주소</h3>
+              <table className="setup-table">
+                <thead>
+                  <tr>
+                    <th>설정 화면의 입력칸</th>
+                    <th>넣을 값</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Supabase → URL Configuration → Site URL</td>
+                    <td>
+                      <code>{websiteUrl}</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Supabase → Redirect URLs → Add URL</td>
+                    <td>
+                      <code>{websiteUrl}</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Google → Authorized JavaScript origins</td>
+                    <td>
+                      <code>{websiteOrigin}</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Google → Authorized redirect URIs</td>
+                    <td>본인 Supabase의 Google 설정에 표시된 Callback URL</td>
+                  </tr>
+                  <tr>
+                    <td>Supabase Google → Client ID / Client Secret</td>
+                    <td>Google Cloud에서 발급한 각각의 값</td>
+                  </tr>
+                </tbody>
+              </table>
               <p>
                 Supabase의 Site URL과 Redirect URLs에는 아래 주소를 넣으세요. 개인 프로젝트의 Google
                 Callback URL과는 다른 값입니다.
@@ -298,19 +367,42 @@ export function WelcomeGuide({
             <li>
               <h3>4. 본인 학생 연결 서버 배포</h3>
               <p>
-                PC에 Node.js 24를 설치하고 최신 프로그램 저장소를 내려받아 압축을 풉니다.
-                package.json이 있는 폴더에서 터미널을 열고 실행합니다. YOUR_PROJECT_ID는 본인
-                Supabase Settings → General의 Reference ID로 바꾸세요.
+                Supabase 왼쪽 Edge Functions → Deploy a new function → Via Editor를 선택합니다.
+                이름은 반드시 <code>device</code>로 입력하고, index.ts의 예제 코드를 전부 지운 뒤
+                아래 통합 서버 코드를 붙여 넣어 Deploy 하세요.
               </p>
-              <pre className="guide-code">
-                {
-                  'npx --yes supabase@2.121.0 login\nnpx --yes supabase@2.121.0 functions deploy device --project-ref YOUR_PROJECT_ID --no-verify-jwt'
-                }
-              </pre>
+              <div className="detail-actions">
+                <button
+                  className="button primary"
+                  onClick={() => copySetup(dashboardFunction, '학생 연결 서버 코드')}
+                >
+                  학생 연결 서버 코드 복사
+                </button>
+                <button
+                  className="button"
+                  onClick={() => download('device-dashboard.txt', dashboardFunction)}
+                >
+                  학생 연결 서버 코드 다운로드
+                </button>
+              </div>
               <p>
-                로그인 토큰을 요구하면 본인 터미널에만 입력합니다. Edge Functions → device에서
-                배포를 확인합니다.
+                device의 Details/Settings에서 <strong>Verify JWT with legacy secret</strong> 또는{' '}
+                <strong>Enforce JWT verification</strong>을 OFF로 저장합니다. 이 함수의 설정만
+                바꾸며 DB RLS나 Google 로그인은 끄지 않습니다. 서버 코드는 교사·학생 인증을 직접
+                검사합니다. 별도의 서비스 비밀키 입력은 필요하지 않습니다.
               </p>
+              <details>
+                <summary>명령어로 배포하는 대체 방법</summary>
+                <p>
+                  PC에 Node.js 24를 설치하고 최신 저장소 폴더에서 실행하세요. YOUR_PROJECT_ID는 본인
+                  프로젝트 Reference ID입니다.
+                </p>
+                <pre className="guide-code">
+                  {
+                    'npx --yes supabase@2.121.0 login\nnpx --yes supabase@2.121.0 functions deploy device --project-ref YOUR_PROJECT_ID --no-verify-jwt'
+                  }
+                </pre>
+              </details>
             </li>
             <li>
               <h3>5. 내 연결값 입력</h3>
@@ -331,8 +423,9 @@ export function WelcomeGuide({
               </p>
             </li>
           </ol>
-          <h3>전체 가입·설정·보안 가이드</h3>
-          <p>로그인 정보 저장 위치, 보안 책임 분담, 비용, 문제 해결까지 포함했습니다.</p>
+          {copied && <p role="status">{copied}</p>}
+          <h3>처음 쓰는 교사용 입력칸별 가이드</h3>
+          <p>프로젝트 생성부터 첫 교사 로그인까지, 넣을 값을 순서대로 확인하세요.</p>
           <button
             className="button"
             onClick={() => download('클래스온-개인-Supabase-가이드.md', setupText)}
@@ -340,6 +433,16 @@ export function WelcomeGuide({
             전체 가이드 다운로드
           </button>
           <pre className="guide-reference">{setupText}</pre>
+          <details>
+            <summary>추가 참고: 보안·비용·개발자 배포·문제 해결</summary>
+            <button
+              className="button"
+              onClick={() => download('클래스온-전체-운영-가이드.md', detailedSetupText)}
+            >
+              전체 운영 가이드 다운로드
+            </button>
+            <pre className="guide-reference">{detailedSetupText}</pre>
+          </details>
         </section>
       )}
     </main>

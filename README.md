@@ -10,7 +10,8 @@ React + TypeScript + Vite 교사 대시보드와 Supabase Database/Auth/Realtime
 
 - **[데모만 보일 때 / 새 웹 버전 게시 방법](docs/DEPLOY.ko.md)**: GitHub Pages와 별도 결과물 사이트에 실제 빌드를 반영하는 절차. 새 화면은 개인 Supabase 연결형 1.2.0입니다.
 
-- **[초보자용 실제 설치 안내](docs/SETUP.ko.md)**: Free 프로젝트, SQL, Google Cloud, 교사 회원가입, Edge Function, Pages, 학생 연결, 가비아 도메인 순서.
+- **[처음 사용자용 입력칸별 안내](docs/FIRST_SETUP.ko.md)**: 프로젝트 생성, 통합 SQL 붙여넣기, Google 로그인 주소, 웹 편집기 함수 배포, URL·공개 키, 첫 교사 가입. 명령어 없이 시작할 수 있습니다.
+- [전체 운영·배포 안내](docs/SETUP.ko.md): 비용·보안·Pages·학생 연결·도메인 설정을 포함합니다.
 - [현재 아키텍처](docs/architecture.md), [권한·인증·개인정보](docs/security.md), [ChromeOS 검증 체크리스트](docs/CHROMEOS.ko.md).
 - [검증 결과](docs/validation.md). 자동 테스트와 실제 계정·크롬북 검증은 구분합니다.
 
@@ -53,6 +54,7 @@ DB 테스트는 PGlite의 실제 PostgreSQL 엔진으로 SQL·RLS·RPC를 실행
 - `src/connection.ts`: 브라우저별 연결 설정. `src/components/ConnectionSetup.tsx`: 공개 연결값 입력.
 - `supabase/migrations/202611040003_security_hardening.sql`: 마지막 보안 업데이트. 업로드 예약/완료·Storage RLS·구형 프로토콜 차단·보안 버전 확인.
 - `supabase/functions/device/`: 학생 인증/등록/기록/명령/캡처 API와 관리자 코드 발급·정리.
+- `setup-files/`: 웹 복사용 통합 SQL과 단일 함수 코드. `npm run setup:generate`가 운영 원본에서 생성하며 개발·테스트·빌드 때 자동 갱신합니다. 이 파일을 직접 수정하지 않습니다.
 - `student-extension/`: 실제 MV3 런타임. 교사가 웹에서 공통 ZIP을 생성합니다. 현재 연결한 개인 프로젝트 URL만 패키징합니다. 같은 프로젝트의 학급끼리 공유하며 다른 프로젝트용 ZIP과 섞지 않습니다.
 - `.env.example`: 공개 설정 이름. 서비스 키·OAuth Secret·비밀번호를 포함하지 않습니다.
 

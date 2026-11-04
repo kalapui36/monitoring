@@ -1763,3 +1763,27 @@ textarea {
   color: #991b1b;
   z-index: 25;
 }
+.setup-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 14px;
+}
+.setup-table th,
+.setup-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px;
+  border: 1px solid #dfe6ef;
+  overflow-wrap: anywhere;
+}
+.setup-table th {
+  background: #f3f6fb;
+}
+@media (max-width: 600px) {
+  .setup-table th,
+  .setup-table td {
+    padding: 8px;
+    font-size: 12px;
+  }
+}

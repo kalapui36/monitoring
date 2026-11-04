@@ -14,3 +14,5 @@ database/
 tests/
 
 artifacts/
+
+setup-files/

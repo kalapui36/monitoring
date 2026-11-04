@@ -6,6 +6,8 @@ Supabase는 로그인(Auth), 데이터베이스(PostgreSQL), 실시간 갱신(Re
 
 실행 사이트에 가짜 학생이 먼저 보이거나 연결 폼이 없다면 Supabase 설정 문제가 아니라 예전 배포본일 수 있습니다. [새 웹 버전 게시 안내](DEPLOY.ko.md)를 먼저 확인하세요. 새 화면의 표시는 **개인 Supabase 연결형 · 1.2.0**입니다.
 
+**입력칸마다 그대로 따라 할 안내가 필요하면 [처음 사용자용 설정표](FIRST_SETUP.ko.md)를 먼저 읽으세요.** 새 프로젝트용 통합 설치 SQL과 Supabase 웹 편집기에 바로 붙일 단일 device 코드도 제공합니다.
+
 ## 1. Supabase 가입과 무료 프로젝트 만들기
 
 1. [Supabase Dashboard](https://supabase.com/dashboard)에 접속합니다. **Sign up / Sign in**을 눌러 안내되는 가입 방식으로 본인의 관리 계정을 만들고 로그인합니다.
@@ -17,7 +19,11 @@ Supabase는 로그인(Auth), 데이터베이스(PostgreSQL), 실시간 갱신(Re
 
 무료 플랜은 무제한이 아닙니다. 본인 프로젝트의 **Usage**, [Pricing](https://supabase.com/pricing)에서 DB·Storage·Edge Function·트래픽 한도를 확인하세요. 20명 하루 4시간 월 20일의 폴링·기록만 대략 154만 회/월이며 실제 사용량은 다릅니다. 한도를 넘으면 제한이나 요금제가 관련될 수 있습니다. 이 안내는 유료 전환을 자동으로 하지 않습니다. 장기간 미사용 시 무료 프로젝트 중지 정책도 확인하세요.
 
-## 2. SQL 네 파일을 순서대로 적용
+## 2. 데이터베이스 설치 SQL 적용
+
+처음 만든 빈 프로젝트는 프로그램 안내의 **통합 설치 SQL 복사**를 눌러 SQL Editor → New query에 전체 붙여 넣고 Run 할 수 있습니다. 네 마이그레이션을 순서대로 실행하고 마지막 결과 installed_security_version=4를 확인합니다. 아래 개별 파일 적용은 대체 방법이며 기존 데이터가 있는 프로젝트는 백업·설치 이력을 먼저 확인합니다.
+
+### 개별 SQL을 적용할 때
 
 웹페이지의 **처음 사용 · 설정 안내 → 내 Supabase 설정**에서 SQL을 다운로드할 수 있습니다. 저장소의 다음 파일과 동일합니다.
 
@@ -64,27 +70,23 @@ Google 화면에서 앱 게시/검증이나 개인정보 안내를 요구하면 
 
 ## 4. 학생 연결 서버 배포
 
-공통 웹사이트가 학생 연결 서버까지 제공하는 것은 아닙니다. **본인 프로젝트에 device 함수를 배포**해야 학생 등록·캡처가 작동합니다.
+먼저 웹 편집기로 진행할 수 있습니다. PC에 개발 도구를 설치할 필요가 없습니다.
 
-1. PC에 [Node.js 24 LTS](https://nodejs.org/)를 설치합니다.
-2. 최신 프로그램 저장소를 PC에 받습니다. GitHub 저장소에서 **Code → Download ZIP**으로 내려받아 압축을 풀어도 됩니다. 폴더 안에 package.json과 supabase/functions/device가 있어야 합니다. 학생용 ZIP과 다른 파일입니다.
-3. Windows에서는 이 폴더 주소창에 `powershell`을 입력해 터미널을 열고, macOS에서는 터미널에서 이 폴더로 이동합니다.
-4. 다음 명령으로 Supabase에 로그인합니다.
+1. 프로그램 안내에서 **학생 연결 서버 코드 복사**를 누릅니다. setup/device-dashboard.txt 파일 전체와 같은 코드입니다.
+2. 본인 Supabase **Edge Functions → Deploy a new function → Via Editor**를 엽니다.
+3. 함수 이름은 **device**로 지정합니다. index.ts의 예제를 모두 지우고 복사한 전체 코드를 붙여 넣어 **Deploy** 합니다.
+4. 배포된 device의 **Details / Settings**에서 **Verify JWT with legacy secret** 또는 **Enforce JWT verification**을 OFF로 저장합니다. 이 함수만 바꿉니다. DB RLS·Google 인증은 끄지 않습니다. 코드 안에서 교사와 학생 인증을 각각 검증합니다.
+5. Supabase가 서버에 제공하는 SUPABASE_URL과 SUPABASE_SERVICE_ROLE_KEY를 사용하므로 이 비밀값을 웹 연결 폼에 직접 넣지 않습니다.
+6. 배포 오류가 없고 목록에 device가 있는지 확인합니다. 실제 기능 확인은 교사 로그인/소유자 지정 후 참여 코드 발급과 학생 기기 연결로 진행합니다. 기본 Hello World 테스트 본문은 이 API의 요청 형식과 다릅니다.
+
+단일 파일은 현재 운영 원본에서 생성하며 상대 import가 없습니다. 기존 파일 구조로 CLI 배포를 원하는 경우 Node.js 24를 설치하고 최신 저장소 폴더에서 다음을 실행합니다. YOUR_PROJECT_ID는 본인의 Project Settings → General → Reference ID입니다.
 
 ```sh
 npx --yes supabase@2.121.0 login
-```
-
-브라우저 승인을 진행합니다. CLI가 토큰을 요구한다면 본인의 Supabase 계정 Access Tokens에서 발급해 **본인 터미널 프롬프트에만** 입력합니다. 채팅으로 전달하지 않습니다.
-
-5. Supabase **Project Settings → General → Reference ID / Project ID**를 복사합니다. 아래 YOUR_PROJECT_ID를 그 값으로 바꾸어 실행합니다.
-
-```sh
 npx --yes supabase@2.121.0 functions deploy device --project-ref YOUR_PROJECT_ID --no-verify-jwt
 ```
 
-6. **Edge Functions → device**에서 배포 상태를 확인합니다. 이 과정에는 Docker 설치가 필요하지 않습니다. 함수 안에서 교사 Auth와 기기 토큰을 별도로 검증하므로 이 함수에만 --no-verify-jwt를 적용합니다.
-7. 서비스 키는 Supabase 서버 기본 환경변수에서 사용합니다. 웹·학생 ZIP에 복사하지 않습니다.
+로그인 토큰을 요구하면 본인 터미널에만 입력하고 채팅에 보내지 않습니다. 실제 사용자 프로젝트에서의 배포 성공은 로컬 코드 검사와 별도로 확인해야 합니다.
 
 ## 5. 공통 웹사이트에서 내 프로젝트 연결
 
