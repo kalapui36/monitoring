@@ -1,11 +1,48 @@
 {
-  "name": "classroom-pulse-starter",
-  "version": "0.1.0",
+  "name": "monitoring",
   "private": true,
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "python3 -m http.server 5173",
-    "test": "node --test tests/*.test.mjs"
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build && node scripts/secure-build.mjs && node scripts/build-help.mjs && node scripts/copy-cname.mjs",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test:live": "vitest run src/App.test.tsx src/database.test.ts src/edge.test.ts src/protocol.test.ts src/worker.test.ts src/models.test.ts src/student-package.test.ts src/connection.test.ts src/components/ConnectionSetup.test.tsx src/activity.test.ts",
+    "test:legacy": "node --test tests/core.test.mjs",
+    "test:security": "vitest run src/security.test.ts src/notice-security.test.ts src/edge-security.test.ts src/security-policy.test.ts src/worker.test.ts src/connection.test.ts src/App.test.tsx",
+    "test:browser-security": "node scripts/security-browser.mjs",
+    "security:scan": "node scripts/scan-secrets.mjs",
+    "security:manifest": "node scripts/security-manifest.mjs",
+    "export:site": "npm run build && node scripts/export-site.mjs"
   },
-  "description": "교사용 수업 모니터링 대시보드 초기 UI 및 백엔드 설계 초안"
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
+    "fflate": "^0.8.3",
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.11",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "^0.28.2",
+    "jsdom": "^25.0.1",
+    "prettier": "^3.9.10",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.0",
+    "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  }
 }

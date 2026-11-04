@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "클래스온 학생 도우미",
+  "version": "1.2.0",
+  "minimum_chrome_version": "120",
+  "description": "교사 승인 후 학급 연결, 학습 기록, 공지, Chrome 잠금 창과 승인된 캡처를 제공합니다.",
+  "permissions": ["storage", "tabs", "alarms", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*/*", "http://*/*"],
+      "js": ["control.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "setup.html"
+  }
+}

@@ -1,0 +1,16 @@
+node_modules
+dist
+package-lock.json
+coverage
+
+# Preserve original standalone prototype files
+app.mjs
+core.mjs
+style.css
+demo_offline.html
+CODEX_BRIEF.md
+TEST_RESULTS.md
+database/
+tests/
+
+artifacts/

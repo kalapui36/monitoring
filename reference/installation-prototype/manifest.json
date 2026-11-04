@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "클래스온 학생 도우미 · 개발용",
+  "version": "0.2.0",
+  "description": "설치 진단용 개발 빌드. 실제 학생 등록 및 기기 제어는 서버 연동 후 제공됩니다.",
+  "permissions": ["storage"],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "action": { "default_popup": "setup.html" },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self'"
+  }
+}

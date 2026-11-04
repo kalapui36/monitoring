@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+  background: #eef3ff;
+  color: #152d60;
+  font:
+    18px/1.7 system-ui,
+    sans-serif;
+}
+main {
+  padding: 28px;
+}
+h1 {
+  font-size: 15px;
+  color: #4d6392;
+}
+#message {
+  font-size: 28px;
+  font-weight: 700;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+button {
+  border: 0;
+  border-radius: 8px;
+  background: #2858bb;
+  color: white;
+  padding: 10px 25px;
+  font-size: 16px;
+  cursor: pointer;
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+coverage/
+
+# Generated local reports and export archives; never deploy these from source.
+artifacts/

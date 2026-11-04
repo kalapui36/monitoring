@@ -1,54 +1,69 @@
-# Classroom Pulse — 교사용 웹 대시보드 (시각적 프로토타입 v0.1)
+# 클래스온 · monitoring
 
-수업 운영을 위한 관리자 대시보드의 **오프라인 데모**입니다. 현재 학생 20명 기준으로 디자인했으며 동아리/외부 수업 그룹을 포함합니다. React/Vite 없이 동작하는 HTML, CSS, ES 모듈로 작성되어 Codex와 GitHub에서 바로 수정할 수 있습니다.
+React + TypeScript + Vite 교사 대시보드와 Supabase Database/Auth/Realtime/Storage, ZIP 수동 설치형 Chrome MV3 확장을 연결하는 프로젝트입니다.
 
-## 지금 구현된 기능
+**각 교사가 자신의 Supabase 프로젝트를 연결하는 개인 프로젝트 방식입니다.** 공통 웹은 정적 프로그램만 배포합니다. 브라우저 연결 화면에 본인 Project URL과 공개 Publishable key를 입력하며, 배포자 DB로 자동 연결하거나 공용 회원 DB에 가입 정보를 모으지 않습니다. 로그인·학생·캡처·사용량은 연결한 프로젝트에 속합니다. 첫 방문 가이드에 Supabase 가입·SQL ①②③④·Google OAuth·함수 배포·소유자 지정·크롬북 설치를 안내합니다.
 
-- 학급 전환: 정규 수업(20명), 동아리(8명), 외부 수업(6명) — **모두 가상 데이터**
-- 학생 검색, 상태 필터, 카드/리스트 모드
-- 전체/선택 학생 화면 잠금 상태 변경 **시뮬레이션**
-- 수업 공지 작성·표시 시간 검증·활동 타임라인 **시뮬레이션**
-- 시연 데이터 CSV 내보내기
-- 기본 반응형 디자인 및 브라우저 키보드 접근성
-- Node.js 내장 테스트 러너로 핵심 데이터 로직 검증
+기존 가상 데이터는 운영에서 제외하고 `src/demo/`와 `reference/`에 보존했습니다. 실제 DB가 비어 있으면 빈 화면입니다.
 
-**경고:** 이 프로젝트는 아직 Supabase 계정이나 실제 학생 크롬북과 연결되지 않았습니다. 잠금, 공지, 캡처는 학생 기기를 조작하지 않습니다. 실제 학생 개인정보를 넣지 마세요. 가상 화면을 실제 수업용으로 배포하지 마세요.
+## 먼저 읽기
 
-## 가장 쉬운 실행 방법 (Windows)
+- **[데모만 보일 때 / 새 웹 버전 게시 방법](docs/DEPLOY.ko.md)**: GitHub Pages와 별도 결과물 사이트에 실제 빌드를 반영하는 절차. 새 화면은 개인 Supabase 연결형 1.2.0입니다.
 
-`demo_offline.html` 파일을 더블클릭하면 Chrome에서 즉시 대시보드 디자인과 가상 기능을 시연할 수 있습니다. 별도 설치나 계정이 필요하지 않습니다. 이 파일은 편의를 위한 단일 HTML 데모이며, 실제 서비스 개발에서는 `index.html`, `style.css`, `app.mjs`, `core.mjs`를 수정하세요.
+- **[초보자용 실제 설치 안내](docs/SETUP.ko.md)**: Free 프로젝트, SQL, Google Cloud, 교사 회원가입, Edge Function, Pages, 학생 연결, 가비아 도메인 순서.
+- [현재 아키텍처](docs/architecture.md), [권한·인증·개인정보](docs/security.md), [ChromeOS 검증 체크리스트](docs/CHROMEOS.ko.md).
+- [검증 결과](docs/validation.md). 자동 테스트와 실제 계정·크롬북 검증은 구분합니다.
 
-## 개발용 로컬 서버에서 열기
+## 현재 코드
 
-1. 압축을 풉니다.
-2. 터미널에서 이 폴더로 이동합니다.
-3. `python -m http.server 5173` (Windows에서는 `py -m http.server 5173`도 가능)
-4. 브라우저에서 `http://localhost:5173`을 엽니다.
-5. `node --test tests/core.test.mjs`로 로직 테스트를 실행합니다.
+- Google OAuth/세션 복원/로그아웃, 본인 프로젝트 Google 로그인과 세션 복원, SQL Editor에서 수동 지정한 소유자 UUID에만 교사 가입·데이터 접근 허용. 첫 로그인 자동 승격은 없습니다.
+- 실제 DB 학급 생성·변경·기록 ON/OFF, 학생 등록 신청·교사 승인·등록 폐기·정보 수정.
+- 확장의 접속 확인·현재 사이트·URL·체류 기록·도움 요청 전송.
+- 전체/선택/개별 명령, revision·만료·중복 방지·기기 ACK, 학생별 오류 상세.
+- 검은 Chrome 전체 화면 팝업 잠금, 문구·자동 해제·비상 코드·통신 단절 안전 해제, 제한된 창 복구.
+- 공지 표시·닫기, 활성 웹 탭 캡처 업로드, 비공개 버킷의 인증된 이미지 조회.
+- 확장 전용 공지 창·시크릿 탭 제외·캡처 서버 확정, 보관 기간 설정·수동 정리, Pages Actions와 후속 사용자 도메인 CNAME 복사.
 
-인터넷 연결이나 별도의 `npm install` 없이 프런트엔드 데모가 동작합니다. `index.html`을 파일로 직접 열면 ES 모듈 보안 제한으로 작동하지 않을 수 있으니 로컬 서버를 이용하세요.
+이는 **외부 설정까지 이미 적용됐다는 뜻은 아닙니다.** 사용자 Supabase 프로젝트와 Google OAuth 설정·함수 배포가 필요합니다. 실제 ChromeOS에서 테스트하지 않은 기능을 학교 운영 완료로 간주하지 마세요. OS 전체 잠금을 보장하지 않습니다.
 
-## 준비된 파일
+## 개발
 
-| 경로 | 목적 |
-|---|---|
-| `index.html`, `style.css`, `app.mjs` | 교사용 디자인 및 데모 작동 |
-| `core.mjs` | 공통 학생/필터/공지/상태 변경 비즈니스 로직 |
-| `tests/core.test.mjs` | Node.js 핵심 로직 테스트 |
-| `database/001_schema_draft.sql` | Supabase 데이터 구조 및 RLS **초안 (운영 미승인)** |
-| `CODEX_BRIEF.md` | Codex에 전달할 작업 지시서 |
+Node.js 24 LTS / npm을 사용합니다.
 
-## 다음 개발 단계
+```sh
+npm ci
+# 웹 연결 폼에서 본인 프로젝트 URL과 공개 키 설정; 빌드 환경변수에는 넣지 않음
+npm run dev
+npm test
+npm run test:live
+npm run test:legacy
+npm run build
+npm run preview
+```
 
-1. **계정·보안 설계:** 교사 로그인(MFA 고려), 교사별 학급 격리, 학생 초대·회수, 서버에서 교사 권한 검증, RLS/스토리지 정책 완성.
-2. **Supabase 연결:** 실시간 device_controls·announcements 구독 및 재접속 시 상태 재조회, 온라인 상태 업데이트.
-3. **학생용 크롬 확장 프로그램:** Manifest V3, 교사 명령 수신, 로컬 잠금 화면, 명령 ACK, 안전한 잠금 해제, 기본 URL 최소화.
-4. **화면 캡처:** 학교 승인 범위에서만, 권한 표시, 요청 승인/감사 기록, 암호화된 비공개 저장소, 짧은 보관 주기.
-5. **반응 속도 및 안정성:** 20/50/100기기 부하테스트, 네트워크 끊김/재연결/권한 실패 테스트, 학교 계정 정책 검토.
-6. **배포:** 비공개 GitHub 저장소, 분리된 개발/운영 Supabase 프로젝트, 정적 호스팅, 백업 및 모니터링.
+연결 설정은 해당 브라우저 localStorage에 저장합니다. 설정 없이도 빌드·배포할 수 있으며 기본 프로젝트로의 대체 접속은 없습니다. Pages 빌드는 VITE_BASE_PATH만 사용합니다. 비밀키는 연결 폼에서 거부합니다.
 
-Chrome MV3 서비스 워커는 상시 실행을 보장하지 않습니다. 수신을 영구 연결만으로 처리하지 말고 이벤트 기반 재구독 및 상태 재동기화가 필요합니다. `windows.onRemoved`는 창 닫힘 시 즉각적인 이벤트 처리에 활용 가능하나 운영체제 전체 잠금을 보장하지 않습니다.
+DB 테스트는 PGlite의 실제 PostgreSQL 엔진으로 SQL·RLS·RPC를 실행하며 Supabase 호스팅 서비스 전체를 대체하지 않습니다. `test:live`는 운영 코드 관련 로컬 자동 검사이고, 실제 학교 연결 테스트라는 뜻은 아닙니다. 전체 테스트에는 과거 시연 UI 회귀 검사가 별도로 포함됩니다.
 
-## 비밀정보 취급
+## 서버 파일
 
-`.env`, service_role 키, 학생 개인정보, 화면 캡처 이미지, 초대 토큰은 절대로 Git에 커밋하지 마세요. Supabase 공개 anon/publishable 키만 프런트엔드에 노출 가능하며, 데이터 보호는 서버의 인증·RLS로 강제해야 합니다. SQL 초안은 실제 학생 계정 발급·스토리지·등록 기능을 아직 포함하지 않습니다.
+- `supabase/migrations/202610220001_monitoring.sql`: 새 app_* 테이블, RLS, private bucket, Realtime, 명령/등록 RPC.
+- `supabase/migrations/202611040001_teacher_accounts.sql`: 기본 SQL 다음에 적용할 교사 회원가입·소유자·교사별 RLS/RPC/Storage 업그레이드. 기존 단일 관리자 학급은 소유자를 보존합니다.
+- `supabase/migrations/202611040002_personal_project.sql`: 마지막에 적용하는 개인 프로젝트 소유자 전용 가입·접근 제한.
+- `src/connection.ts`: 브라우저별 연결 설정. `src/components/ConnectionSetup.tsx`: 공개 연결값 입력.
+- `supabase/migrations/202611040003_security_hardening.sql`: 마지막 보안 업데이트. 업로드 예약/완료·Storage RLS·구형 프로토콜 차단·보안 버전 확인.
+- `supabase/functions/device/`: 학생 인증/등록/기록/명령/캡처 API와 관리자 코드 발급·정리.
+- `student-extension/`: 실제 MV3 런타임. 교사가 웹에서 공통 ZIP을 생성합니다. 현재 연결한 개인 프로젝트 URL만 패키징합니다. 같은 프로젝트의 학급끼리 공유하며 다른 프로젝트용 ZIP과 섞지 않습니다.
+- `.env.example`: 공개 설정 이름. 서비스 키·OAuth Secret·비밀번호를 포함하지 않습니다.
+
+## 보안 검증
+
+[공격 시뮬레이션 보고서](docs/security-review.ko.md), [검증 결과](docs/validation.md)를 읽으세요. npm run test:security는 격리된 자동 검증이며 실제 서비스 침투 테스트가 아닙니다. npm run security:scan은 알려진 비밀 패턴만 검사합니다. 빌드 후 테스트 Chromium(CDP 127.0.0.1:9222)에서 npm run test:browser-security로 로컬 브라우저 공격을 재현합니다. 테스트 수집 서버는 루프백에만 생성되며 합성 토큰만 사용하고 운영 배포에 포함하지 않습니다.
+
+현재 보안 보완은 ④ SQL + 최신 Edge + 학생 ZIP 1.1을 모두 적용해야 합니다. CSP/초기 자원 무결성/Actions 커밋 고정도 배포 코드 자체의 침해나 유효 토큰 탈취를 막는 절대 보장이 아닙니다. 실서비스 확인 전 학교 운영 안전 인증을 받은 것으로 취급하지 마세요.
+
+## 알려진 범위
+
+한 설치는 한 학급 연결을 활성화합니다. 복수 학급 동시 소속·자동 전환은 미제공입니다. 보관 기간 초과 파일/기록의 자동 예약 삭제는 미설정이며 관리자 정리 버튼이 필요합니다. ChromeOS 시스템 페이지·학교 정책·MV3 절전 때문에 모든 환경에서 같은 제어 지연이나 잠금 범위를 보장하지 않습니다. 실제 99대 동시 네트워크 부하는 별도 검증 대상입니다.
+
+코드 작성·로컬 검사와 사용자 Supabase 적용·GitHub 배포·실제 기기 검증은 각각 별도 완료 단계입니다.

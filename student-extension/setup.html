@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>클래스온 학생 연결</title>
+    <link rel="stylesheet" href="setup.css" />
+  </head>
+  <body>
+    <main>
+      <span class="badge">학교 안내와 동의에 따라 사용하세요</span>
+      <h1>클래스온 학생 연결</h1>
+      <div id="status" role="status">확인 중…</div>
+      <form id="register">
+        <label for="code">교사가 발급한 참여 코드</label
+        ><input id="code" required autocomplete="off" maxlength="32" /><label for="number"
+          >학생 번호</label
+        ><input id="number" type="number" min="1" max="999" required /><label for="name">이름</label
+        ><input id="name" required maxlength="40" autocomplete="off" /><button id="submit">
+          등록 신청
+        </button>
+      </form>
+      <section id="connected" hidden>
+        <p id="info"></p>
+        <button id="help" type="button">선생님께 도움 요청</button>
+      </section>
+      <button id="refresh" type="button">연결 다시 확인</button>
+      <p>
+        교사가 승인해야 연결됩니다. 기록 ON일 때 활성 웹사이트와 체류시간을 기록하며 교사가
+        공지·Chrome 잠금 창·화면 캡처를 요청할 수 있습니다. ChromeOS 전체 잠금 기능은 아닙니다.
+      </p>
+      <p>정보가 잘못되었으면 교사에게 수정이나 기기 등록 폐기를 요청하세요.</p>
+    </main>
+    <script type="module" src="setup.js"></script>
+  </body>
+</html>

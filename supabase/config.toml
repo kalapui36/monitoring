@@ -1,0 +1,3 @@
+project_id = "monitoring"
+[functions.device]
+verify_jwt = false
