@@ -7,18 +7,18 @@
 - Chrome이 노출한 카메라·파일·설정 내부 주소의 개인정보 경로 제거·고정 이름·서버/확장 규칙 일치 검사.
 - 실제 확장 소스의 Chrome API 모의에서 카메라 활동 전송과 내부 앱 캡처 거부, 실제 Edge HTTP handler+PostgreSQL에서 카메라 이력 저장 검사. 실제 OS 앱 감지를 실증한 것은 아니다.
 - 상대 경로 빌드의 OAuth 복귀 경로·데모 제외·스크립트 실패 안내, static ZIP의 버전/설정 안내 포함 확인.
-- 원격 main의 최초 데모 커밋 진단 후 새 코드와 Pages 배포 워크플로 반영을 진행한다. 원격 반영/실사이트 확인 결과는 배포 단계와 구분한다.
+- 원격 main의 최초 데모 커밋 진단 후 새 코드와 Pages 배포 워크플로 반영을 진행한다. 원격 26fec7f의 CI와 Pages artifact 게시 성공을 GitHub 웹 UI에서 확인했다. 실사이트 HTML 직접 요청은 여전히 차단되어 별개다.
 
 ## 로컬 자동 검증
 
-| 명령/범위              | 결과                                                            |
-| ---------------------- | --------------------------------------------------------------- |
-| `npm test`             | 20개 파일 141건 통과: 운영 코드 98건 + 이전 시연 코드 회귀 43건 |
-| `npm run test:legacy`  | 원격 저장소에서 보존한 최초 프로토타입 Node 테스트 12건 통과    |
-| `npm run build`        | TypeScript 검사 + Vite 정적 빌드 + 선택적 CNAME 복사 통과       |
-| Deno `check`           | Edge Function index/handler와 npm 의존성의 Deno 타입 검사 통과  |
-| 확장 JS `node --check` | background/control/setup/lock/notice/protocol 문법 검사 통과    |
-| `npm audit`            | 실행 시점 보고된 취약점 0개                                     |
+| 명령/범위              | 결과                                                             |
+| ---------------------- | ---------------------------------------------------------------- |
+| `npm test`             | 20개 파일 144건 통과: 운영 코드 101건 + 이전 시연 코드 회귀 43건 |
+| `npm run test:legacy`  | 원격 저장소에서 보존한 최초 프로토타입 Node 테스트 12건 통과     |
+| `npm run build`        | TypeScript 검사 + Vite 정적 빌드 + 선택적 CNAME 복사 통과        |
+| Deno `check`           | Edge Function index/handler와 npm 의존성의 Deno 타입 검사 통과   |
+| 확장 JS `node --check` | background/control/setup/lock/notice/protocol 문법 검사 통과     |
+| `npm audit`            | 실행 시점 보고된 취약점 0개                                      |
 
 보안 검증 결과는 [공격 시뮬레이션 보고서](security-review.ko.md)에서 재현·수정·잔여 위험·실서비스 미검증을 구분한다. 보완 후 테스트 통과가 유효 토큰 탈취·배포 코드 침해까지 차단했다는 뜻은 아니다.
 

@@ -41,3 +41,9 @@ VITE_BASE_PATH=./ npm run export:site
 그러나 Android·Linux 앱과 ChromeOS의 모든 기본 앱 실행/전환을 열거하는 권한은 일반 수동 설치 확장에 없습니다. 카메라 앱도 기기의 Chrome API에 노출되지 않으면 감지하지 못합니다. 카메라 촬영 영상이나 OS 전체 화면을 보는 기능도 아닙니다. 학생 카드의 사이트는 **최근 감지 결과**이지 보이지 않는 OS 활동을 추정한 값이 아닙니다.
 
 첨부 구형 ZIP v2.0은 폴링에서 tab.url을 프로토콜 제한 없이 전송하는 경로가 있었고, Apps Script v5.3 생성기는 isWebPage()로 HTTP(S)를 제한합니다. 서로 다른 버전이므로 어느 코드가 실제 기기에서 동작했는지에 따라 범위가 다를 수 있습니다. 새 ZIP과 실제 크롬북에서 카메라 앱을 열어 수신되는지 별도 확인해야 합니다.
+
+## 이번 원격 반영 확인
+
+진단 후 새 코드를 원격 main에 반영했습니다. 첫 배포는 Pages Source 자동 변경 단계에서 실패했으나, 그 실패가 표준 artifact 게시를 막지 않도록 보완한 `26fec7f` 실행은 성공했습니다. GitHub에서 보고한 게시 경로는 `kalapui.com/monitoring/`입니다. 사이트 HTML을 이 클라우드에서 직접 요청하면 외부 접속 정책에 막히므로 원격 Actions의 게시 성공과 실제 브라우저 화면 확인을 구분합니다.
+
+GitHub Settings → Pages에서 **Enforce HTTPS**도 켜 주세요. 앱은 공개 HTTP 주소에서 Auth 초기화 전에 HTTPS로 이동하지만, 서버의 HTTPS 강제 설정과 동등한 보장은 아닙니다. 시작 안내는 현재 접속 주소를 계산하여 각 교사가 복사할 Site URL·Redirect URLs와 Google origin을 표시합니다.

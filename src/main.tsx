@@ -1,6 +1,10 @@
+import { httpsUpgrade } from './entry-policy'
 // Do not initialize Auth or read data when a third-party site embeds the dashboard.
 // GitHub Pages cannot set frame-ancestors headers; host-level headers remain preferable.
-if (window.top !== window.self) {
+const upgrade = httpsUpgrade(window.location.href)
+if (upgrade) {
+  window.location.replace(upgrade)
+} else if (window.top !== window.self) {
   const root = document.getElementById('root')
   if (root)
     root.textContent =

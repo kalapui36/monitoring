@@ -55,9 +55,9 @@ app_classes/app_students/app_commands/app_events/app_captures가 대상입니다
 5. **Clients → Create client → Web application**을 선택합니다.
 6. 본인 Supabase **Authentication → Sign In / Providers → Google**에서 표시되는 **Callback URL**을 복사합니다. 보통 `https://본인프로젝트.supabase.co/auth/v1/callback`입니다.
 7. Google Cloud 클라이언트의 **Authorized redirect URIs**에 그 Callback URL을 붙여 넣습니다. 이 칸에 클래스온 웹 주소를 넣으면 안 됩니다.
-8. Authorized JavaScript origins 칸에는 사용하는 웹사이트의 origin(기본 배포는 `https://kalapui36.github.io`)만 넣습니다. `/monitoring/`는 origin 칸에 넣지 않습니다.
+8. Authorized JavaScript origins 칸에는 사용하는 웹사이트의 origin(현재 게시 사이트는 `https://kalapui.com`)만 넣습니다. `/monitoring/`는 origin 칸에 넣지 않습니다.
 9. 생성한 Client ID와 Client Secret을 본인 Supabase의 Google 제공자 설정에 입력 → Google 로그인 활성화 → **Save**합니다. Secret은 이 화면에만 넣고 웹 연결 폼·채팅·GitHub에는 넣지 않습니다.
-10. Supabase **Authentication → URL Configuration**의 **Site URL**과 **Redirect URLs → Add URL**에 실제 사용하는 웹사이트 주소(기본 `https://kalapui36.github.io/monitoring/`)를 넣습니다. 끝 `/`와 실제 도메인을 맞추세요.
+10. Supabase **Authentication → URL Configuration**의 **Site URL**과 **Redirect URLs → Add URL**에 실제 사용하는 웹사이트 주소(현재 게시 주소 `https://kalapui.com/monitoring/`)를 넣습니다. 끝 `/`와 실제 도메인을 맞추세요.
 11. **Allow new users to sign up**이 켜져 있어야 첫 Auth 계정이 만들어집니다. 소유자 제한은 ③ SQL이 별도로 강제합니다. 본인만 Test user여도 학교 Google Workspace가 외부 앱을 금지하면 담당자 확인이 필요합니다.
 
 Google 화면에서 앱 게시/검증이나 개인정보 안내를 요구하면 안내를 따릅니다. Testing 상태의 제한·세션 정책은 Google이 정하므로 장기 로그인 유지 기간을 무조건 보장하지 않습니다.

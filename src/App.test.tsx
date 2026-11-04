@@ -278,6 +278,17 @@ describe('운영 화면의 로그인·관리자 경계와 실제 데이터 흐�
     expect(document.querySelector('svg[onload]')).toBeNull()
     expect((globalThis as any).studentAttack).toBeUndefined()
   })
+  it('Supabase 안내는 예시 도메인이 아니라 현재 사이트의 로그인 복귀 주소를 표시한다', async () => {
+    const user = userEvent.setup()
+    render(<App client={null} />)
+    await user.click(screen.getByRole('button', { name: 'Supabase 연동 방법 · 처음 시작' }))
+    expect(screen.getByLabelText('Supabase 로그인 복귀 주소')).toHaveTextContent(
+      window.location.origin + '/',
+    )
+    expect(document.querySelector('.guide-reference')!.textContent).not.toContain(
+      'https://kalapui.com',
+    )
+  })
   it('잘못된 세션은 다시 로그인을 요구하며 데이터에 접근하지 않는다', async () => {
     const db = backend(true)
     db.auth.getUser.mockResolvedValue({ data: { user: null }, error: { message: 'expired' } })

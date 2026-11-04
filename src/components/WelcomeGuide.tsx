@@ -1,6 +1,7 @@
+import { oauthRedirect } from '../backend'
 import { RELEASE_LABEL } from '../release'
 import { useState } from 'react'
-import setupText from '../../docs/SETUP.ko.md?raw'
+import setupTemplate from '../../docs/SETUP.ko.md?raw'
 import baseSql from '../../supabase/migrations/202610220001_monitoring.sql?raw'
 import teacherSql from '../../supabase/migrations/202611040001_teacher_accounts.sql?raw'
 import personalSql from '../../supabase/migrations/202611040002_personal_project.sql?raw'
@@ -100,6 +101,13 @@ export function WelcomeGuide({
   initialTab?: 'teacher' | 'operator'
 }) {
   const [tab, setTab] = useState<'teacher' | 'operator' | 'student'>(initialTab)
+  const websiteUrl = oauthRedirect()
+  const websiteOrigin = new URL(websiteUrl).origin
+  const setupText = setupTemplate
+    .replaceAll('https://kalapui.com/monitoring/', websiteUrl)
+    .replaceAll('https://kalapui36.github.io/monitoring/', websiteUrl)
+    .replaceAll('https://kalapui36.github.io', websiteOrigin)
+    .replaceAll('https://kalapui.com', websiteOrigin)
   return (
     <main className="welcome-guide">
       <header className="guide-header">
@@ -272,6 +280,19 @@ export function WelcomeGuide({
                 URL Configuration의 Site URL·Redirect URLs에는 실제 공통 웹사이트 주소를 넣으세요.
                 Callback과 웹사이트 주소는 다릅니다. 아래 전체 가이드 3절에서 상세 메뉴를
                 확인하세요.
+              </p>
+            </li>
+            <li>
+              <h3>로그인 설정에 복사할 현재 웹 주소</h3>
+              <p>
+                Supabase의 Site URL과 Redirect URLs에는 아래 주소를 넣으세요. 개인 프로젝트의 Google
+                Callback URL과는 다른 값입니다.
+              </p>
+              <code className="user-id" aria-label="Supabase 로그인 복귀 주소">
+                {websiteUrl}
+              </code>
+              <p>
+                Google의 JavaScript origins 입력란에는 <code>{websiteOrigin}</code>를 넣습니다.
               </p>
             </li>
             <li>
