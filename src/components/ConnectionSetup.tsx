@@ -5,7 +5,7 @@ export function ConnectionSetup({
   onGuide,
 }: {
   onConnect: (c: ProjectConnection) => void
-  onGuide: () => void
+  onGuide?: () => void
 }) {
   const current = readConnection()
   const [url, setUrl] = useState(current?.url || ''),
@@ -25,11 +25,7 @@ export function ConnectionSetup({
         }
       }}
     >
-      <p>학생 정보와 기록은 각 교사가 연결한 본인의 Supabase 프로젝트에 저장됩니다.</p>
-      <p>① Supabase 가입·초기 설정 → ② 아래 URL·공개 키 연결 → ③ 교사 Google 로그인 순서입니다.</p>
-      <button className="button" type="button" disabled>
-        Google 로그인 · 먼저 내 Supabase 연결
-      </button>
+      {onGuide && <p>학생 정보와 기록은 각 교사가 연결한 본인의 Supabase 프로젝트에 저장됩니다.</p>}
       <label htmlFor="project-url">내 Supabase Project URL</label>
       <input
         id="project-url"
@@ -63,9 +59,11 @@ export function ConnectionSetup({
         <button className="button primary" type="submit">
           내 프로젝트에 연결
         </button>
-        <button className="button" type="button" onClick={onGuide}>
-          Supabase 연동 방법 · 처음 시작
-        </button>
+        {onGuide && (
+          <button className="button" type="button" onClick={onGuide}>
+            Supabase 연동 방법 · 처음 시작
+          </button>
+        )}
       </div>
       <p className="muted">
         연결 저장은 주소·키 형식만 확인합니다. SQL·로그인·서버 배포가 끝났는지는 다음 화면과 학생

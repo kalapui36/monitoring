@@ -2,6 +2,8 @@
 
 프로그램 주소는 https://kalapui.com/monitoring/ 입니다. 각 교사가 자기 Supabase에 가입해 설정합니다. Supabase 관리 계정과 프로그램의 Google 로그인은 별개입니다. 프로젝트 이름이나 비밀번호를 채팅에 알려 줄 필요는 없습니다.
 
+웹의 **내 Supabase 설정**에서 한 장씩 안내를 볼 수 있습니다. 그림의 번호를 따라 누를 위치를 찾고 **다음**으로 이동하세요. 이 문서는 전체 절차를 한 번에 확인할 때 사용합니다.
+
 ## 1. 새 프로젝트 만들기
 
 https://supabase.com/dashboard 에서 가입/로그인한 뒤 New project를 누릅니다.

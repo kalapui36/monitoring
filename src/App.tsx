@@ -35,7 +35,8 @@ import { downloadStudentPackage } from './student-package'
 import { WelcomeGuide, ChromebookInstallGuide } from './components/WelcomeGuide'
 import { RELEASE_LABEL } from './release'
 import { ConnectionSetup } from './components/ConnectionSetup'
-import { readConnection, removeConnection } from './connection'
+import { CopyButton } from './components/CopyButton'
+import { readConnection, removeConnection, type ProjectConnection } from './connection'
 
 type Action = { kind: Command['kind']; ids: string[]; requestId: string }
 type Detail = {
@@ -57,10 +58,16 @@ export default function App({ client = configuredClient }: { client?: SupabaseCl
       return true
     }
   })
+  function connect(connection: ProjectConnection) {
+    const nextClient = createProjectClient(connection)
+    setActiveProjectUrl(connection.url)
+    setActiveClient(nextClient)
+  }
   if (showGuide)
     return (
       <WelcomeGuide
-        initialTab={activeClient ? 'teacher' : 'operator'}
+        initialTab={activeClient && window.location.hash !== '#guide' ? 'teacher' : 'operator'}
+        onConnect={activeClient ? undefined : connect}
         onClose={() => {
           setShowGuide(false)
           try {
@@ -118,13 +125,7 @@ export default function App({ client = configuredClient }: { client?: SupabaseCl
       ) : (
         <Access title="클래스온 연결 설정">
           <p className="muted">{RELEASE_LABEL}</p>
-          <ConnectionSetup
-            onGuide={() => setShowGuide(true)}
-            onConnect={(connection) => {
-              setActiveProjectUrl(connection.url)
-              setActiveClient(createProjectClient(connection))
-            }}
-          />
+          <ConnectionSetup onGuide={() => setShowGuide(true)} onConnect={connect} />
         </Access>
       )}
     </>
@@ -257,7 +258,8 @@ function ConnectedApp({ client, projectUrl }: { client: SupabaseClient; projectU
         </p>
       </Access>
     )
-  if (access !== 'allowed')
+  if (access !== 'allowed') {
+    const ownerSql = `insert into public.app_admins(user_id) values ('${session.user.id}') on conflict (user_id) do nothing;`
     return (
       <Access title={access === 'denied' ? '교사 회원가입' : '연결을 확인해 주세요'}>
         {access === 'denied' ? (
@@ -275,7 +277,8 @@ function ConnectedApp({ client, projectUrl }: { client: SupabaseClient; projectU
               프로젝트에서 가입하면 안 됩니다.
             </p>
             <code className="user-id">{session.user.id}</code>
-            <pre className="guide-code">{`insert into public.app_admins(user_id) values ('${session.user.id}') on conflict (user_id) do nothing;`}</pre>
+            <pre className="guide-code">{ownerSql}</pre>
+            <CopyButton label="소유자 등록 SQL 복사" value={ownerSql} />
             <label className="signup-consent">
               <input
                 type="checkbox"
@@ -324,6 +327,7 @@ function ConnectedApp({ client, projectUrl }: { client: SupabaseClient; projectU
         </div>
       </Access>
     )
+  }
   return (
     <Dashboard
       projectUrl={projectUrl}

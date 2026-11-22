@@ -6,7 +6,7 @@
 
 첫 화면에 **개인 Supabase 연결형 · 1.2.0**과 시작 안내가 보여야 합니다. 안내를 닫으면 **내 Supabase Project URL**, **내 Supabase 공개 Publishable key**, **내 프로젝트에 연결**이 나옵니다. Google 로그인은 본인 프로젝트를 연결한 뒤 활성화합니다. 학생 수는 실제 DB가 비어 있으면 0명이며 가짜 학생을 생성하지 않습니다.
 
-배포 주소 끝에 `version.json`을 붙여 열면 version=1.2.0, mode=personal-supabase, demoData=false인지 확인할 수 있습니다. `SETUP.html`은 JavaScript 없이 읽는 전체 Supabase 안내입니다.
+배포 주소 끝에 `version.json`을 붙여 열면 version=1.2.0, mode=personal-supabase, demoData=false인지 확인할 수 있습니다. `SETUP.html`에서 단계별 설정 안내를 열거나 전체 안내를 펼칠 수 있습니다.
 
 ## A. GitHub Pages에서 배포
 
@@ -21,7 +21,7 @@
 ## B. 별도 제작물/결과물 웹사이트에 올리기
 
 1. `monitoring-web-1.2.0.zip`은 소스 ZIP이 아니라 바로 게시할 수 있는 정적 웹 빌드입니다.
-2. 압축을 풀고 index.html, assets/, docs/, SETUP.html, version.json을 **모니터링 프로그램을 게시할 폴더**에 함께 업로드합니다. 다른 제작물 폴더를 덮어쓰지 마세요. assets 폴더가 빠지면 프로그램이 시작되지 않습니다.
+2. 압축을 풀고 index.html, assets/, docs/, setup/, setup-screens/, SETUP.html, version.json을 **모니터링 프로그램을 게시할 폴더**에 함께 업로드합니다. 다른 제작물 폴더를 덮어쓰지 마세요. assets 폴더가 빠지면 프로그램이 시작되지 않습니다.
 3. HTTPS 웹 주소로 접속합니다. 파일을 더블클릭한 file:// 주소에서는 Google 로그인을 운영하지 않습니다.
 4. 교사는 자신의 Supabase Site URL/Redirect URLs에 **실제 게시 주소**를 등록합니다. 이 ZIP은 상대 경로로 빌드하여 `/monitoring/`나 다른 하위 폴더에서도 자원을 찾을 수 있게 했습니다.
 5. 보안상 다른 사이트의 iframe 안에서는 로그인을 실행하지 않습니다. 제작물 페이지의 링크로 프로그램을 **새 탭에서 직접** 여는 방식을 사용하세요.

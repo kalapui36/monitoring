@@ -1,22 +1,7 @@
-import { oauthRedirect } from '../backend'
-import { RELEASE_LABEL } from '../release'
 import { useState } from 'react'
-import setupTemplate from '../../docs/SETUP.ko.md?raw'
-import firstSetupTemplate from '../../docs/FIRST_SETUP.ko.md?raw'
-import baseSql from '../../supabase/migrations/202610220001_monitoring.sql?raw'
-import teacherSql from '../../supabase/migrations/202611040001_teacher_accounts.sql?raw'
-import personalSql from '../../supabase/migrations/202611040002_personal_project.sql?raw'
-import securitySql from '../../supabase/migrations/202611040003_security_hardening.sql?raw'
-import installSql from '../../setup-files/monitoring-install.sql?raw'
-import dashboardFunction from '../../setup-files/device-dashboard.txt?raw'
-function download(name: string, content: string) {
-  const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }))
-  const a = document.createElement('a')
-  a.href = url
-  a.download = name
-  a.click()
-  setTimeout(() => URL.revokeObjectURL(url), 1000)
-}
+import type { ProjectConnection } from '../connection'
+import { SetupWizard } from './SetupWizard'
+
 export function ChromebookInstallGuide() {
   return (
     <div className="install-guide">
@@ -98,55 +83,27 @@ export function ChromebookInstallGuide() {
 }
 export function WelcomeGuide({
   onClose,
-  initialTab = 'teacher',
+  onConnect,
+  initialTab = 'operator',
 }: {
   onClose: () => void
+  onConnect?: (connection: ProjectConnection) => void
   initialTab?: 'teacher' | 'operator'
 }) {
   const [tab, setTab] = useState<'teacher' | 'operator' | 'student'>(initialTab)
-  const [copied, setCopied] = useState('')
-  async function copySetup(text: string, label: string) {
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopied(label + ' 복사 완료. Supabase 입력창에 붙여 넣으세요.')
-    } catch {
-      setCopied('복사 권한을 확인하거나 다운로드한 파일을 열어 전체 내용을 복사하세요.')
-    }
-  }
-  const websiteUrl = oauthRedirect()
-  const websiteOrigin = new URL(websiteUrl).origin
-  const localize = (text: string) =>
-    text
-      .replaceAll('https://kalapui.com/monitoring/', websiteUrl)
-      .replaceAll('https://kalapui36.github.io/monitoring/', websiteUrl)
-      .replaceAll('https://kalapui36.github.io', websiteOrigin)
-      .replaceAll('https://kalapui.com', websiteOrigin)
-  const setupText = localize(firstSetupTemplate)
-  const detailedSetupText = localize(setupTemplate)
   return (
     <main className="welcome-guide">
       <header className="guide-header">
         <div>
-          <span className="eyebrow">클래스온 시작 안내</span>
+          <p className="guide-kicker">monitoring 사용 안내</p>
           <h1>처음 오셨나요?</h1>
-          <p className="muted">{RELEASE_LABEL}</p>
-          <p>
-            각 교사가 자기 Supabase 프로젝트를 연결합니다. 학생 데이터와 사용량은 각자의 프로젝트에
-            저장됩니다.
-          </p>
+          <p>처음 설정할 때 필요한 작업을 한 장씩 안내합니다.</p>
         </div>
-        <button className="button primary" onClick={onClose}>
-          서비스로 돌아가기
+        <button className="button" onClick={onClose}>
+          {onConnect ? '연결 화면으로' : '서비스로 돌아가기'}
         </button>
       </header>
       <nav className="guide-tabs" aria-label="사용 안내 선택">
-        <button
-          className="button"
-          aria-pressed={tab === 'teacher'}
-          onClick={() => setTab('teacher')}
-        >
-          교사 회원가입·시작
-        </button>
         <button
           className="button"
           aria-pressed={tab === 'operator'}
@@ -156,293 +113,43 @@ export function WelcomeGuide({
         </button>
         <button
           className="button"
+          aria-pressed={tab === 'teacher'}
+          onClick={() => setTab('teacher')}
+        >
+          교사 회원가입·시작
+        </button>
+        <button
+          className="button"
           aria-pressed={tab === 'student'}
           onClick={() => setTab('student')}
         >
           학생 크롬북 설치
         </button>
       </nav>
-      <aside className="guide-warning">
-        <strong>확인할 수 있는 범위</strong>
-        <p>
-          일반 웹페이지와 Chrome이 탭/창 정보로 알려 주는 일부 내부 앱 활동을 확인합니다.
-          카메라·파일·설정 앱도 해당 주소가 노출되는 기기에서만 감지할 수 있습니다.
-          ChromeOS·Android·Linux의 모든 앱/활동을 감시하는 기능이나 카메라 촬영 영상을 보는 기능은
-          아닙니다. 표시 정보는 최근 감지 결과이며 모든 앱의 현재 상태를 보장하지 않습니다.
-        </p>
-      </aside>
+      {tab === 'operator' && <SetupWizard onClose={onClose} onConnect={onConnect} />}
       {tab === 'teacher' && (
         <section className="guide-panel">
           <h2>내 프로젝트로 수업 시작</h2>
           <ol className="help-list">
+            <li>‘내 Supabase 설정’을 한 장씩 따라 하며 본인 프로젝트를 연결하세요.</li>
             <li>
-              본인 Supabase 계정·프로젝트를 만들고 SQL·Google 로그인·학생 연결 함수를 설정합니다.
-              아래 ‘내 Supabase 설정’을 따라 하세요.
+              Google로 로그인하고, 교사 회원가입 화면에서 본인을 프로젝트 소유자로 등록하세요.
             </li>
-            <li>
-              공통 웹의 연결 화면에 본인 Project URL과 공개 Publishable key를 입력합니다. 배포자의
-              Supabase를 공동 사용하지 않습니다.
-            </li>
-            <li>
-              Google 계정으로 로그인한 뒤 표시된 본인 UUID를 본인 Supabase SQL Editor에서 소유자로
-              지정하고 교사 회원가입을 완료합니다. 첫 로그인에 자동 권한을 주지 않습니다.
-            </li>
-            <li>
-              학급 추가 → 참여 코드 발급 → 본인 프로젝트용 학생 ZIP 배포 → 기기 확인 후 승인을
-              진행합니다.
-            </li>
-            <li>
-              모니터링 ON에서 기록을 수집합니다. OFF는 활동 수집을 중단하되 제어는 유지합니다. 수업
-              전 정상·비상 해제를 검증하세요.
-            </li>
+            <li>학급을 만들고 참여 코드와 학생용 ZIP을 전달하세요.</li>
           </ol>
+          <p>
+            로그인 정보와 학급·학생 기록은 선생님이 연결한 Supabase 프로젝트에 저장됩니다. Chrome이
+            탭 정보로 알려 주는 웹사이트와 일부 내부 앱 활동을 확인할 수 있습니다.
+          </p>
           <button className="button primary" onClick={() => setTab('operator')}>
-            Supabase 가입부터 설정하기
+            단계별 설정 열기
           </button>
-          <h3>로그인 정보와 보안</h3>
-          <p>
-            Google 비밀번호는 Google에, 사용자 UUID·이메일 등 인증 정보는 본인 Supabase Auth에
-            저장됩니다. 로그인 유지용 토큰은 브라우저에 저장됩니다. 배포자 공용 회원 DB는 사용하지
-            않습니다.
-          </p>
-          <p>
-            Supabase가 인증 서버를 관리해도 웹 코드·배포 계정과 각자의 계정·RLS·비밀키는 관리해야
-            합니다. 공통 웹이 침해되면 브라우저 세션도 영향을 받을 수 있어 개인 DB만으로 모든 위험이
-            없어지지는 않습니다.
-          </p>
         </section>
       )}
       {tab === 'student' && (
         <section className="guide-panel">
           <h2>학생용 ZIP 설치 — 크롬북 기준</h2>
           <ChromebookInstallGuide />
-        </section>
-      )}
-      {tab === 'operator' && (
-        <section className="guide-panel">
-          <h2>Supabase를 처음 사용하는 교사 안내</h2>
-          <p>
-            아래 순서를 각 교사가 본인 계정에서 진행합니다. 사이트를 직접 다시 배포하지 않고 같은 웹
-            주소에서 각자의 프로젝트에 연결할 수 있습니다.
-          </p>
-          <p className="guide-warning">
-            Free 플랜으로 시작하고 본인 Usage/Pricing을 확인하세요. 무료 사용량은 무제한이 아닙니다.
-            서비스 비밀키·DB 비밀번호·Google Client Secret은 이 사이트나 채팅에 입력하지 마세요.
-          </p>
-          <ol className="help-list setup-steps">
-            <li>
-              <h3>1. Supabase 가입·프로젝트 생성</h3>
-              <p>
-                <a href="https://supabase.com/dashboard" target="_blank" rel="noreferrer">
-                  Supabase Dashboard
-                </a>{' '}
-                → Sign up → 본인 계정 가입 → New project → Free 조직·플랜 → 프로젝트 이름·DB
-                비밀번호·가까운 Region → Create new project. DB 비밀번호는 본인만 안전하게
-                보관합니다.
-              </p>
-            </li>
-            <li>
-              <h3>2. 통합 SQL로 데이터베이스 설치</h3>
-              <p>
-                처음 만든 빈 프로젝트는 아래 ‘통합 설치 SQL 복사’를 누릅니다. 본인 Supabase SQL
-                Editor → New query의 큰 코드 입력창에 전체 붙여넣기 → Run 후 결과가
-                installed_security_version = 4인지 확인하세요. 이름·비밀번호를 코드에 넣지 않습니다.
-              </p>
-              <div className="detail-actions">
-                <button
-                  className="button primary"
-                  onClick={() => copySetup(installSql, '통합 설치 SQL')}
-                >
-                  통합 설치 SQL 복사
-                </button>
-                <button
-                  className="button"
-                  onClick={() => download('monitoring-install.sql', installSql)}
-                >
-                  통합 설치 SQL 다운로드
-                </button>
-              </div>
-              <p>
-                아래 개별 파일은 대체 설치·업데이트용입니다. 개별 설치는 ①→②→③→④ 순서로 실행합니다.
-                기존 DB는 먼저 백업하고 설치 이력을 확인하세요.
-              </p>
-              <div className="detail-actions">
-                <button
-                  className="button"
-                  onClick={() => download('202610220001_monitoring.sql', baseSql)}
-                >
-                  ① 기본 SQL 다운로드
-                </button>
-                <button
-                  className="button"
-                  onClick={() => download('202611040001_teacher_accounts.sql', teacherSql)}
-                >
-                  ② 교사 회원가입 SQL 다운로드
-                </button>
-                <button
-                  className="button"
-                  onClick={() => download('202611040002_personal_project.sql', personalSql)}
-                >
-                  ③ 개인 프로젝트 SQL 다운로드
-                </button>
-                <button
-                  className="button"
-                  onClick={() => download('202611040003_security_hardening.sql', securitySql)}
-                >
-                  ④ 보안 업데이트 SQL 다운로드
-                </button>
-              </div>
-              <p>
-                Storage의 student-captures는 Public이 꺼져 있어야 합니다. ④를 누락하면 데이터 화면
-                접근을 중단합니다.
-              </p>
-            </li>
-            <li>
-              <h3>3. Google 로그인 연결</h3>
-              <p>
-                <a href="https://console.cloud.google.com/" target="_blank" rel="noreferrer">
-                  Google Cloud Console
-                </a>{' '}
-                → 본인 프로젝트 생성 → Google Auth Platform → Branding/Audience 설정 →
-                External/Testing에서 본인 계정을 Test users에 추가 → Clients → Web application.
-                Supabase Authentication → Google의 Callback URL을 Google의 Authorized redirect
-                URIs에 넣습니다.
-              </p>
-              <p>
-                발급된 Client ID/Secret은 본인 Supabase Google 제공자 설정에만 넣습니다. Supabase
-                URL Configuration의 Site URL·Redirect URLs에는 실제 공통 웹사이트 주소를 넣으세요.
-                Callback과 웹사이트 주소는 다릅니다. 아래 전체 가이드 3절에서 상세 메뉴를
-                확인하세요.
-              </p>
-            </li>
-            <li>
-              <h3>로그인 설정에 복사할 현재 웹 주소</h3>
-              <table className="setup-table">
-                <thead>
-                  <tr>
-                    <th>설정 화면의 입력칸</th>
-                    <th>넣을 값</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Supabase → URL Configuration → Site URL</td>
-                    <td>
-                      <code>{websiteUrl}</code>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Supabase → Redirect URLs → Add URL</td>
-                    <td>
-                      <code>{websiteUrl}</code>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Google → Authorized JavaScript origins</td>
-                    <td>
-                      <code>{websiteOrigin}</code>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Google → Authorized redirect URIs</td>
-                    <td>본인 Supabase의 Google 설정에 표시된 Callback URL</td>
-                  </tr>
-                  <tr>
-                    <td>Supabase Google → Client ID / Client Secret</td>
-                    <td>Google Cloud에서 발급한 각각의 값</td>
-                  </tr>
-                </tbody>
-              </table>
-              <p>
-                Supabase의 Site URL과 Redirect URLs에는 아래 주소를 넣으세요. 개인 프로젝트의 Google
-                Callback URL과는 다른 값입니다.
-              </p>
-              <code className="user-id" aria-label="Supabase 로그인 복귀 주소">
-                {websiteUrl}
-              </code>
-              <p>
-                Google의 JavaScript origins 입력란에는 <code>{websiteOrigin}</code>를 넣습니다.
-              </p>
-            </li>
-            <li>
-              <h3>4. 본인 학생 연결 서버 배포</h3>
-              <p>
-                Supabase 왼쪽 Edge Functions → Deploy a new function → Via Editor를 선택합니다.
-                이름은 반드시 <code>device</code>로 입력하고, index.ts의 예제 코드를 전부 지운 뒤
-                아래 통합 서버 코드를 붙여 넣어 Deploy 하세요.
-              </p>
-              <div className="detail-actions">
-                <button
-                  className="button primary"
-                  onClick={() => copySetup(dashboardFunction, '학생 연결 서버 코드')}
-                >
-                  학생 연결 서버 코드 복사
-                </button>
-                <button
-                  className="button"
-                  onClick={() => download('device-dashboard.txt', dashboardFunction)}
-                >
-                  학생 연결 서버 코드 다운로드
-                </button>
-              </div>
-              <p>
-                device의 Details/Settings에서 <strong>Verify JWT with legacy secret</strong> 또는{' '}
-                <strong>Enforce JWT verification</strong>을 OFF로 저장합니다. 이 함수의 설정만
-                바꾸며 DB RLS나 Google 로그인은 끄지 않습니다. 서버 코드는 교사·학생 인증을 직접
-                검사합니다. 별도의 서비스 비밀키 입력은 필요하지 않습니다.
-              </p>
-              <details>
-                <summary>명령어로 배포하는 대체 방법</summary>
-                <p>
-                  PC에 Node.js 24를 설치하고 최신 저장소 폴더에서 실행하세요. YOUR_PROJECT_ID는 본인
-                  프로젝트 Reference ID입니다.
-                </p>
-                <pre className="guide-code">
-                  {
-                    'npx --yes supabase@2.121.0 login\nnpx --yes supabase@2.121.0 functions deploy device --project-ref YOUR_PROJECT_ID --no-verify-jwt'
-                  }
-                </pre>
-              </details>
-            </li>
-            <li>
-              <h3>5. 내 연결값 입력</h3>
-              <p>
-                Supabase Settings → Data API에서 Project URL, API Keys에서 Publishable key를
-                복사합니다. 서비스로 돌아가 ‘내 Supabase Project URL’과 ‘내 Supabase 공개
-                Publishable key’에 넣고 ‘내 프로젝트에 연결’을 누릅니다. 이 브라우저에만 저장되며
-                GitHub 설정·재배포가 필요하지 않습니다. 다른 기기에서는 다시 연결합니다.
-              </p>
-            </li>
-            <li>
-              <h3>6. 로그인·소유자 지정·학생 연결</h3>
-              <p>
-                Google 로그인 후 웹에 표시되는 UUID를 Supabase Authentication → Users에서
-                대조합니다. SQL Editor에서 app_admins에 본인 UUID를 지정하는 SQL을 실행하고 교사
-                가입을 완료합니다. 정확한 SQL은 아래 전체 가이드 6절과 가입 화면에 있습니다. 학급
-                생성 후 본인 프로젝트용 ZIP으로 크롬북 한 대를 검증하세요.
-              </p>
-            </li>
-          </ol>
-          {copied && <p role="status">{copied}</p>}
-          <h3>처음 쓰는 교사용 입력칸별 가이드</h3>
-          <p>프로젝트 생성부터 첫 교사 로그인까지, 넣을 값을 순서대로 확인하세요.</p>
-          <button
-            className="button"
-            onClick={() => download('클래스온-개인-Supabase-가이드.md', setupText)}
-          >
-            전체 가이드 다운로드
-          </button>
-          <pre className="guide-reference">{setupText}</pre>
-          <details>
-            <summary>추가 참고: 보안·비용·개발자 배포·문제 해결</summary>
-            <button
-              className="button"
-              onClick={() => download('클래스온-전체-운영-가이드.md', detailedSetupText)}
-            >
-              전체 운영 가이드 다운로드
-            </button>
-            <pre className="guide-reference">{detailedSetupText}</pre>
-          </details>
         </section>
       )}
     </main>

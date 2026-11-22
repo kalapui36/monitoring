@@ -2,11 +2,17 @@ import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import App from './App'
+import * as projectBackend from './backend'
+import { readConnection } from './connection'
 import * as studentPackage from './student-package'
 beforeEach(() => {
   localStorage.setItem('classon-welcome-v4', 'seen')
 })
 const uid = '11111111-1111-4111-8111-111111111111'
+async function openSetupStep(user: ReturnType<typeof userEvent.setup>, title: string) {
+  await user.click(screen.getByText('단계 목록', { selector: 'summary' }))
+  await user.click(screen.getByRole('button', { name: title }))
+}
 function backend(approved = false, loggedIn = true, initial = false) {
   const user = { id: uid, email: 'test@example.com', user_metadata: { full_name: '테스트 교사' } }
   const session = loggedIn ? { user, access_token: 'test-session' } : null
@@ -119,18 +125,25 @@ function backend(approved = false, loggedIn = true, initial = false) {
   }
 }
 describe('운영 화면의 로그인·관리자 경계와 실제 데이터 흐름', () => {
-  it('처음 방문에는 Supabase 설정 안내가 자동으로 열리고 닫은 뒤 재방문하면 반복하지 않는다', async () => {
+  it('첫 설정 안내는 한 장씩 넘기며, 다시 열면 보던 장을 보여준다', async () => {
     localStorage.removeItem('classon-welcome-v4')
     const user = userEvent.setup(),
       view = render(<App client={null} />)
-    expect(
-      screen.getByRole('heading', { name: 'Supabase를 처음 사용하는 교사 안내' }),
-    ).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: '서비스로 돌아가기' }))
+    expect(screen.getByRole('heading', { name: '내 학급 저장공간 만들기' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '이전' })).toBeDisabled()
+    await user.click(screen.getByRole('button', { name: '다음' }))
+    expect(screen.getByRole('heading', { name: '학생 기록 저장공간 설치하기' })).toHaveFocus()
+    expect(screen.queryByRole('heading', { name: '내 학급 저장공간 만들기' })).toBeNull()
+    await user.click(screen.getByRole('button', { name: '이전' }))
+    expect(screen.getByRole('heading', { name: '내 학급 저장공간 만들기' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: '다음' }))
+    await user.click(screen.getByRole('button', { name: '연결 화면으로' }))
     expect(localStorage.getItem('classon-welcome-v4')).toBe('seen')
     view.unmount()
     render(<App client={null} />)
     expect(screen.getByText('클래스온 연결 설정')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Supabase 연동 방법 · 처음 시작' }))
+    expect(screen.getByRole('heading', { name: '학생 기록 저장공간 설치하기' })).toBeInTheDocument()
   })
   it('연결 미설정에서는 가상 학생을 표시하지 않는다', () => {
     render(<App client={null} />)
@@ -164,18 +177,43 @@ describe('운영 화면의 로그인·관리자 경계와 실제 데이터 흐�
     expect(await screen.findByText('아직 학급이 없습니다')).toBeInTheDocument()
     expect(db.rpc).toHaveBeenCalledWith('app_enroll_teacher')
   })
-  it('공개 안내에서 Supabase 절차와 크롬북 ZIP 설치를 로그인 없이 볼 수 있다', async () => {
+  it('공개 안내의 현재 장에서 SQL을 복사하고 학생 설치 안내로 전환할 수 있다', async () => {
     const user = userEvent.setup()
     render(<App client={null} />)
     await user.click(screen.getByRole('button', { name: 'Supabase 연동 방법 · 처음 시작' }))
-    await user.click(screen.getByRole('button', { name: '내 Supabase 설정' }))
-    expect(screen.getByRole('button', { name: '② 교사 회원가입 SQL 다운로드' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: '3. Google 로그인 연결' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: '다음' }))
+    expect(screen.getByRole('img', { name: /Supabase SQL Editor/ })).toHaveAttribute(
+      'src',
+      expect.stringContaining('setup-screens/sql-editor.png'),
+    )
+    await user.click(screen.getByRole('button', { name: '통합 설치 SQL 복사' }))
+    expect(await navigator.clipboard.readText()).toContain('installed_security_version')
     await user.click(screen.getByRole('button', { name: '학생 크롬북 설치' }))
     expect(screen.getByText(/크롬북 운영체제의 개발자 모드로 전환/)).toBeInTheDocument()
     expect(screen.getByText(/학교 정책으로 개발자 모드나/)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: '서비스로 돌아가기' }))
+    await user.click(screen.getByRole('button', { name: '연결 화면으로' }))
     expect(screen.getByText('클래스온 연결 설정')).toBeInTheDocument()
+  })
+  it('안내 카드에서 프로젝트를 연결하면 교사 등록 안내를 거쳐 로그인 화면이 열린다', async () => {
+    const user = userEvent.setup()
+    const db = backend(false, false)
+    vi.spyOn(projectBackend, 'createProjectClient').mockReturnValue(db.client)
+    render(<App client={null} />)
+    await user.click(screen.getByRole('button', { name: 'Supabase 연동 방법 · 처음 시작' }))
+    await openSetupStep(user, '내 프로젝트 주소와 공개 키 연결하기')
+    await user.type(screen.getByLabelText('내 Supabase Project URL'), 'https://teacher.supabase.co')
+    const key = 'sb_publishable_' + 'a'.repeat(25)
+    await user.type(screen.getByLabelText('내 Supabase 공개 Publishable key'), key)
+    await user.click(screen.getByRole('button', { name: '내 프로젝트에 연결' }))
+    expect(readConnection()).toEqual({ url: 'https://teacher.supabase.co', key })
+    expect(
+      screen.getByRole('heading', { name: 'Google로 로그인하고 교사 등록하기' }),
+    ).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: '교사 로그인 화면 열기' }))
+    expect(
+      await screen.findByRole('button', { name: 'Google 계정으로 로그인' }),
+    ).toBeInTheDocument()
+    expect(db.from).not.toHaveBeenCalled()
   })
   it('가입된 교사라도 DB가 비어 있으면 학급·학생을 생성해 보여주지 않는다', async () => {
     const db = backend(true)
@@ -282,12 +320,12 @@ describe('운영 화면의 로그인·관리자 경계와 실제 데이터 흐�
     const user = userEvent.setup()
     render(<App client={null} />)
     await user.click(screen.getByRole('button', { name: 'Supabase 연동 방법 · 처음 시작' }))
+    await openSetupStep(user, '로그인하고 돌아올 주소 저장하기')
     expect(screen.getByLabelText('Supabase 로그인 복귀 주소')).toHaveTextContent(
       window.location.origin + '/',
     )
-    expect(document.querySelector('.guide-reference')!.textContent).not.toContain(
-      'https://kalapui.com',
-    )
+    await user.click(screen.getByRole('button', { name: '로그인 복귀 주소 복사' }))
+    expect(await navigator.clipboard.readText()).toBe(window.location.origin + '/')
   })
   it('잘못된 세션은 다시 로그인을 요구하며 데이터에 접근하지 않는다', async () => {
     const db = backend(true)

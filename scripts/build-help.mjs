@@ -21,7 +21,45 @@ for (const file of files)
   await writeFile('dist/docs/' + file, await readFile('supabase/migrations/' + file))
 await writeFile(
   'dist/SETUP.html',
-  `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="${PRODUCTION_CSP}"><meta name="referrer" content="no-referrer"><title>클래스온 Supabase 설정 안내</title><style>body{max-width:940px;margin:30px auto;padding:20px;font:16px/1.8 system-ui;color:#172a49;background:#f6f8fc}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;padding:24px;border-radius:12px}a{color:#2459c4}li{margin:10px}</style></head><body><h1>Supabase 가입·연결 안내</h1><p>개인 Supabase 연결형 ${RELEASE_VERSION}. 각 교사가 본인 프로젝트를 설정합니다.</p><p><a href="./">프로그램 연결 화면 열기</a> · <a href="https://supabase.com/dashboard" rel="noreferrer" target="_blank">Supabase 관리 화면</a></p><p><a href="setup/monitoring-install.sql" download>새 프로젝트 설치 통합 SQL 다운로드</a> · <a href="setup/device-dashboard.txt" target="_blank" rel="noreferrer">학생 연결 서버 코드 열기</a></p><ol>${files.map((f, i) => `<li><a href="docs/${f}" download>SQL ${i + 1} 다운로드</a></li>`).join('')}</ol><pre>${escape(guide)}</pre></body></html>`,
+  `<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="${PRODUCTION_CSP}">
+    <meta name="referrer" content="no-referrer">
+    <title>monitoring Supabase 설정 안내</title>
+    <style>
+      body { max-width: 860px; margin: 32px auto; padding: 20px; font: 16px/1.8 system-ui; color: #172a49; background: #f6f8fc; }
+      h1 { line-height: 1.25; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; background: white; padding: 20px; border-radius: 12px; }
+      a { color: #2459c4; }
+      .start { display: inline-block; padding: 10px 16px; border-radius: 8px; background: #3158bd; color: white; text-decoration: none; font-weight: 700; }
+      summary { cursor: pointer; font-weight: 600; }
+      li { margin: 8px 0; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Supabase 가입·연결 안내</h1>
+      <p>교사 본인의 Supabase를 연결하는 방법을 한 장씩 확인하세요.</p>
+      <p><a class="start" href="./#guide">단계별 설정 안내 시작 →</a></p>
+      <details>
+        <summary>전체 설정 안내와 설치 파일 보기</summary>
+        <p><a href="https://supabase.com/dashboard" rel="noreferrer" target="_blank">Supabase 관리 화면</a></p>
+        <ul>
+          <li><a href="setup/monitoring-install.sql" download>통합 설치 SQL 다운로드</a></li>
+          <li><a href="setup/device-dashboard.txt" target="_blank" rel="noreferrer">학생 연결 서버 코드 열기</a></li>
+        </ul>
+        <pre>${escape(guide)}</pre>
+        <details>
+          <summary>기존 프로젝트의 개별 SQL 다운로드</summary>
+          <ol>${files.map((f, i) => `<li><a href="docs/${f}" download>SQL ${i + 1} 다운로드</a></li>`).join('')}</ol>
+        </details>
+      </details>
+    </main>
+  </body>
+</html>`,
 )
 await writeFile(
   'dist/version.json',
